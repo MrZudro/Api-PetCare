@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"products"})
+@ToString(exclude = {"subcategorias"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "category")
@@ -24,10 +24,7 @@ public class Category {
     @EqualsAndHashCode.Include
     private String name;
 
-    @Column(length = 255)
-    private String description;
-
-    //relacion ManyToMany con Product
-    @ManyToMany(mappedBy = "categories")
-    private List<Product> products;
+    // Relación One-to-Many con Subcategoria
+    @OneToMany(mappedBy = "categoria")
+    private List<Subcategory> subcategorias;
 }

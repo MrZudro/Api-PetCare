@@ -3,6 +3,7 @@ package edu.sena.petcare.models;
 import java.math.BigDecimal;
 import java.util.List;
 
+import edu.sena.petcare.models.enums.StatusService;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,6 +44,12 @@ public class Product {
     @Column(length = 500, nullable = false)
     private String description;
 
+    @Column(length = 100, nullable = false)
+    private String sku;
+
+    @Enumerated(EnumType.STRING)
+    private StatusService isActive;
+
     //relacion OneToMany con BillDetail
     @OneToMany(mappedBy = "product")
     private List<BillDetail> billDetails;
@@ -56,10 +63,11 @@ public class Product {
     private List<Wishlist> wishlists;
 
     //relacion ManyToMany con categories
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable( name = "product_category",
-                joinColumns = @JoinColumn(name="id_product"),
-                inverseJoinColumns = @JoinColumn(name="id_category")
+    @ManyToMany
+    @JoinTable(
+        name = "producto_subcategoria",
+        joinColumns = @JoinColumn(name = "producto_id"),
+        inverseJoinColumns = @JoinColumn(name = "subcategoria_id")
     )
     private List<Category> categories;
 }

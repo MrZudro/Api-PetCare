@@ -1,5 +1,7 @@
 package edu.sena.petcare.models;
 
+import edu.sena.petcare.models.enums.StatusService;
+
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -8,7 +10,8 @@ import lombok.*;
 @Getter
 @Setter
 @ToString(exclude = {"veterinaryClinics"})
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "services")
@@ -19,8 +22,8 @@ public class Services {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(nullable = false)
-    private Boolean status;
+    @Enumerated(EnumType.STRING)
+    private StatusService status;
 
     @Column(nullable = false, length = 100)
     @EqualsAndHashCode.Include
