@@ -32,7 +32,7 @@ public class User {
     @EqualsAndHashCode.Include
     private String email;
 
-    @Column(name = "password", length = 60, nullable = false)
+    @Column(name = "password_hash", length = 60, nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
