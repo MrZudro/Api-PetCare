@@ -12,7 +12,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(exclude = {"services", "facturas", "documentTypeVeterinary"})
+@ToString(exclude = {"veterinaryClinicServices", "facturas", "documentTypeVeterinary"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -45,9 +45,9 @@ public class VeterinaryClinic {
     @JoinColumn(name = "id_document_type")
     private DocumentType documentTypeVeterinary;
 
-    //relacion ManyToMany con Services
-    @ManyToMany(mappedBy = "veterinaryClinics")
-    private List<Services> services;
+    //relacion OneToMany con VeterinaryClinicService
+    @OneToMany(mappedBy = "veterinaryClinic", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VeterinaryClinicService> veterinaryClinicServices;
 
     //relacion OneToMany con Bill
     @OneToMany(mappedBy = "veterinaryClinic")

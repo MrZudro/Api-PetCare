@@ -8,7 +8,7 @@ import edu.sena.petcare.dto.product.ProductReadDTO;
 public interface ProductService {
 
     //Espera un DTO de creacion, el metodo nuevo producto recibe un DTO de creacion o actualizacion que deja como resultado un nuevoProductoDTO(hijo)
-    ProductNewUpdateDTO nuevoProdcuto(ProductNewUpdateDTO nuevoProductoDTO);
+    ProductReadDTO nuevoProdcuto(ProductNewUpdateDTO nuevoProductoDTO);
     //Espera una lista donde cada item esta en DTO de lectura de Producto, el metodo que los obtiene se llama todosProductos()
     List<ProductReadDTO> todosProductos();
     //Espera un DTO de producto de lectura, el metodo busca por un Id de tipo Long para devolverlo

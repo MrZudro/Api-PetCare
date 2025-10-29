@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"categoria", "productos"})
+@ToString(exclude = {"categoria", "productSubcategories"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "subcategory")
@@ -27,7 +27,7 @@ public class Subcategory {
     @JoinColumn(name = "categoria_id", nullable = false)
     private Category categoria;
     
-    // Relación Many-to-Many con Producto (el lado inverso)
-    @ManyToMany(mappedBy = "subcategorias")
-    private List<Product> productos;
+    // Relación One-to-Many con ProductSubcategory
+    @OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductSubcategory> productSubcategories;
 }

@@ -26,12 +26,12 @@ public interface SubcategoryMapper {
     // Mapeo de DTO de Creación/Actualización a Entidad
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "categoria", ignore = true)  // Se maneja en el servicio con categoryId
-    @Mapping(target = "productos", ignore = true)  // Se maneja en el servicio
+    @Mapping(target = "productSubcategories", ignore = true)  // Se maneja en el servicio
     Subcategory toEntity(SubcategoryNewUpdateDTO dto);
     
     // Actualización de Entidad existente desde DTO
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "categoria", ignore = true)  // Se maneja en el servicio con categoryId
-    @Mapping(target = "productos", ignore = true)  // Se maneja en el servicio
+    @Mapping(target = "productSubcategories", ignore = true)  // Se maneja en el servicio
     void updateEntityFromDto(SubcategoryNewUpdateDTO dto, @MappingTarget Subcategory entity);
 }

@@ -9,7 +9,7 @@ import lombok.*;
 
 @Getter
 @Setter
-@ToString(exclude = {"veterinaryClinics"})
+@ToString(exclude = {"veterinaryClinicServices"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,12 +35,7 @@ public class Services {
     @Column(columnDefinition = "TEXT")
     private String picture;
 
-    //relacion de ManyToMany con VeterinaryClinic
-    @ManyToMany
-    @JoinTable(
-        name = "veterinary_clinic_services",
-        joinColumns = @JoinColumn(name = "id_service"),
-        inverseJoinColumns = @JoinColumn(name = "id_veterinary_clinic")
-    )
-    private List<VeterinaryClinic> veterinaryClinics;
+    //relacion OneToMany con VeterinaryClinicService
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VeterinaryClinicService> veterinaryClinicServices;
 }

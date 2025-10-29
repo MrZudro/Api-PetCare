@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"billDetails", "wishlists", "categories"})
+@ToString(exclude = {"billDetails", "wishlists", "productSubcategories"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table( name = "product",
@@ -44,7 +44,7 @@ public class Product {
     @Column(length = 500, nullable = false)
     private String description;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, unique = true)
     private String sku;
 
     @Enumerated(EnumType.STRING)
@@ -62,12 +62,7 @@ public class Product {
     )
     private List<Wishlist> wishlists;
 
-    //relacion ManyToMany con categories
-    @ManyToMany
-    @JoinTable(
-        name = "producto_subcategoria",
-        joinColumns = @JoinColumn(name = "producto_id"),
-        inverseJoinColumns = @JoinColumn(name = "subcategoria_id")
-    )
-    private List<Category> categories;
+    //relacion OneToMany con ProductSubcategory
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductSubcategory> productSubcategories;
 }

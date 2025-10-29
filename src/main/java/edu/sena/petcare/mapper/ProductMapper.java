@@ -17,13 +17,13 @@ public interface ProductMapper {
     ProductMapper mapper = Mappers.getMapper(ProductMapper.class);
     
     // 1. Mapeo de Entidad a DTO de Lectura
-    @Mapping(target = "subcategoriesIds", expression = "java(entity.getCategories().stream().map(cat -> cat.getId()).toList())")
+    @Mapping(target = "subcategoriesIds", expression = "java(entity.getProductSubcategories().stream().map(ps -> ps.getSubcategory().getId()).toList())")
     ProductReadDTO toDto(Product entity);
     List<ProductReadDTO> toDtoList(List<Product> entities);
 
     // 2. Mapeo de DTO de Solicitud a Entidad (para CREAR/ACTUALIZAR)
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "categories", ignore = true)  // Se maneja en el servicio
+    @Mapping(target = "productSubcategories", ignore = true) // Se maneja en el servicio
     @Mapping(target = "billDetails", ignore = true) // Inicialmente vacío
     @Mapping(target = "wishlists", ignore = true)   // Inicialmente vacío
     @Mapping(target = "isActive", constant = "ACTIVE")  // Nuevo producto siempre activo
@@ -31,8 +31,12 @@ public interface ProductMapper {
     
     // 3. Método para actualizar una Entidad existente
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "categories", ignore = true)  // Se maneja en el servicio
+    @Mapping(target = "productSubcategories", ignore = true) // Se maneja en el servicio
     @Mapping(target = "billDetails", ignore = true) // No se modifica
     @Mapping(target = "wishlists", ignore = true)   // No se modifica
-    void updateEntityFromDto(ProductNewUpdateDTO dto, @MappingTarget Product entity);
+    void updateEntity(ProductNewUpdateDTO dto, @MappingTarget Product entity);
+
+    // 4. Mapeo de Entidad a DTO de Actualización
+    @Mapping(target = "subcategoriaIds", expression = "java(entity.getProductSubcategories().stream().map(ps -> ps.getSubcategory().getId()).toList())")
+    ProductNewUpdateDTO toUpdateDto(Product entity);
 }
