@@ -1,5 +1,6 @@
 package edu.sena.petcare.models;
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -50,4 +51,8 @@ public class Pet {
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
+
+    //relacion OneToMany con PetConditions
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PetConditions> petConditions;
 }
