@@ -72,4 +72,9 @@ public class Bill {
     //relacion OneToMany con Transactions
     @OneToMany(mappedBy = "bill")
     private List<Transactions> billTransactions;
+
+    //relacion con Employee
+    @ManyToOne
+    @JoinColumn(name = "id_employee")
+    private Employee empleado;
 }

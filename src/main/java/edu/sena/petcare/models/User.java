@@ -1,9 +1,12 @@
 package edu.sena.petcare.models;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
 import java.time.*;
 import java.util.List;
+
+import org.hibernate.annotations.*;
 
 import edu.sena.petcare.models.enums.Rol;
 
@@ -11,11 +14,21 @@ import edu.sena.petcare.models.enums.Rol;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"tokens", "documentType", "barrioCliente", "pets", "wishlists", "paymentMethods"})
+@ToString(exclude = {"tokens", "documentType", "barrioCliente"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name ="user")
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED) //Herencia para las otras entidades
+@Table(name = "user")
+@SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
+@FilterDef(
+    name = "activeUsersFilter", // Nombre único para el filtro
+    parameters = @ParamDef(name = "isDeleted", type = Boolean.class)
+)
+@Filter(
+    name = "activeUsersFilter", 
+    condition = "is_deleted = :isDeleted" // Usamos el campo y el parámetro del filtro
+)
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +40,9 @@ public class User {
 
     @Column(name = "last_names", length = 100, nullable = false)
     private String lastNames;
+
+    @Column(name = "document_number", length = 20, nullable = false)
+    private String documentNumber;
 
     @Column(name = "email", length = 200, nullable = false)
     @EqualsAndHashCode.Include
@@ -56,6 +72,11 @@ public class User {
     @Column(length = 20, nullable = false)
     private String phone;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
+    // ---------------- RELACIONES -----------------
+
     //relacion OneToMany con Token
     @OneToMany(mappedBy = "user")
     List<Token> tokens;
@@ -70,15 +91,4 @@ public class User {
     @JoinColumn(name = "id_neighborhood")
     private Neighborhood barrioCliente;
 
-    //relacion OneToMany con Pet
-    @OneToMany(mappedBy = "user")
-    private List<Pet> pets;
-
-    //relacion OneToMany con Wishlist
-    @OneToMany(mappedBy = "user")
-    private List<Wishlist> wishlists;
-
-    //relacion OneToMany con MethodPaymentCustomer
-    @OneToMany(mappedBy = "user")
-    private List<MethodPaymentCustomer> paymentMethods;
 }

@@ -1,4 +1,4 @@
-package edu.sena.petcare.controllers;
+package edu.sena.petcare.controller;
 
 import edu.sena.petcare.dto.service.ServiceNewUpdateDTO;
 import edu.sena.petcare.dto.service.ServiceReadDTO;

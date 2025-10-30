@@ -1,4 +1,4 @@
-package edu.sena.petcare.controllers;
+package edu.sena.petcare.controller;
 
 import edu.sena.petcare.dto.product.ProductNewUpdateDTO;
 import edu.sena.petcare.dto.product.ProductReadDTO;

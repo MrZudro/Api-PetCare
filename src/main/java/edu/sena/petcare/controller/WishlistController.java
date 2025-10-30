@@ -1,4 +1,4 @@
-package edu.sena.petcare.controllers;
+package edu.sena.petcare.controller;
 
 
 import edu.sena.petcare.dto.wishlist.WishlistNewUpdateDTO;
@@ -54,7 +54,7 @@ public class WishlistController {
             @PathVariable Long id,
             @Valid @RequestBody WishlistNewUpdateDTO dto) {
 
-        WishlistReadDTO updatedWishlist = wishlistService.update(id, wishlistNewUpdateDTO);
+        WishlistReadDTO updatedWishlist = wishlistService.update(id, dto);
         return ResponseEntity.ok(updatedWishlist);
     }
 

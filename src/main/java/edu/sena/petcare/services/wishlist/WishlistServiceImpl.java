@@ -3,19 +3,22 @@ package edu.sena.petcare.services.wishlist;
 import edu.sena.petcare.dto.wishlist.WishlistNewUpdateDTO;
 import edu.sena.petcare.dto.wishlist.WishlistReadDTO;
 import edu.sena.petcare.exceptions.ResourceNotFoundException;
+import edu.sena.petcare.exceptions.BadRequestException;
 import edu.sena.petcare.mapper.WishlistMapper;
 import edu.sena.petcare.models.Product;
 import edu.sena.petcare.models.User;
 import edu.sena.petcare.models.Wishlist;
 import edu.sena.petcare.repositories.ProductRepository;
-import edu.sena.petcare.repositories.UserRepository;
 import edu.sena.petcare.repositories.WishlistRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.Assert;
+import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +27,6 @@ public class WishlistServiceImpl implements WishlistService {
 
     private final WishlistRepository wishlistRepository;
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
     private final WishlistMapper wishlistMapper;
 
     @Override
@@ -39,7 +41,7 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     @Transactional(readOnly = true)
     public WishlistReadDTO findById(Long id) {
-        Wishlist wishlist = wishlistRepository.findById(id)
+        Wishlist wishlist = wishlistRepository.findById(Objects.requireNonNull(id, "id es obligatorio"))
                 .orElseThrow(() -> new ResourceNotFoundException("Wishlist no encontrada con id: " + id));
         return wishlistMapper.toReadDTO(wishlist);
     }
@@ -47,45 +49,28 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     @Transactional
     public WishlistReadDTO create(WishlistNewUpdateDTO wishlistDTO) {
-        // 1. Validar User
-        User user = userRepository.findById(wishlistDTO.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + wishlistDTO.getUserId()));
-
-        // 2. Validar Productos
-        List<Product> products = productRepository.findAllById(wishlistDTO.getProductIds());
-        if (products.size() != wishlistDTO.getProductIds().size()) {
-            throw new ResourceNotFoundException("Uno o más productos no fueron encontrados.");
-        }
-
-        // 3. Crear Wishlist
-        Wishlist wishlist = new Wishlist();
-        wishlist.setUser(user);
-        wishlist.setCreateDate(LocalDateTime.now());
-        wishlist.setProducts(products); // Asigna la lista de productos
-
-        // 4. Actualizar el lado "dueño" (Product) de la relación ManyToMany
-        for (Product product : products) {
-            product.getWishlists().add(wishlist);
-        }
-
-        Wishlist savedWishlist = wishlistRepository.save(wishlist);
-        return wishlistMapper.toReadDTO(savedWishlist);
+        Assert.notNull(wishlistDTO, "dto es obligatorio");
+        // La creación manual de wishlists no está permitida; se crea automáticamente al crear un Customer
+        throw new BadRequestException("La wishlist se crea automáticamente al registrar un cliente y no puede crearse manualmente.");
     }
 
     @Override
     @Transactional
+    @SuppressWarnings("null")
     public WishlistReadDTO update(Long id, WishlistNewUpdateDTO wishlistDTO) {
+        Objects.requireNonNull(id, "id es obligatorio");
+        Objects.requireNonNull(wishlistDTO, "dto es obligatorio");
         // 1. Encontrar la Wishlist existente
         Wishlist wishlist = wishlistRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Wishlist no encontrada con id: " + id));
 
-        // 2. Validar User
-        User user = userRepository.findById(wishlistDTO.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + wishlistDTO.getUserId()));
+        // 2. NO se permite cambiar el usuario propietario. Se ignora el userId del DTO.
+        User user = wishlist.getUser();
 
         // 3. Validar Productos nuevos
-        List<Product> newProducts = productRepository.findAllById(wishlistDTO.getProductIds());
-        if (newProducts.size() != wishlistDTO.getProductIds().size()) {
+        List<Long> productIds = wishlistDTO.getProductIds() == null ? Collections.emptyList() : wishlistDTO.getProductIds();
+        List<Product> newProducts = productRepository.findAllById(productIds);
+        if (newProducts.size() != productIds.size()) {
             throw new ResourceNotFoundException("Uno o más productos no fueron encontrados.");
         }
 
@@ -95,7 +80,7 @@ public class WishlistServiceImpl implements WishlistService {
         }
         wishlist.getProducts().clear();
 
-        // 5. Vincular productos nuevos
+        // 5. Vincular productos nuevos (puede ser lista vacía)
         for (Product newProduct : newProducts) {
             wishlist.getProducts().add(newProduct);
             newProduct.getWishlists().add(wishlist);
@@ -111,15 +96,9 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     @Transactional
     public void delete(Long id) {
-        Wishlist wishlist = wishlistRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Wishlist no encontrada con id: " + id));
-
-        // Desvincular de los productos antes de borrar
-        for (Product product : wishlist.getProducts()) {
-            product.getWishlists().remove(wishlist);
-        }
-
-        wishlistRepository.delete(wishlist);
+        Objects.requireNonNull(id, "id es obligatorio");
+        // No se permite eliminar la wishlist
+        throw new BadRequestException("La wishlist no puede ser eliminada. Solo puede ser editada.");
     }
 
     @Override

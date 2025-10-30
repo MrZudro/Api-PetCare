@@ -5,6 +5,7 @@ import java.util.Optional;
 
 
 import org.springframework.stereotype.Service;
+import java.util.Objects;
 
 import edu.sena.petcare.dto.product.ProductNewUpdateDTO;
 import edu.sena.petcare.dto.product.ProductReadDTO;
@@ -24,6 +25,7 @@ public class ProductServiceImpl implements ProductService{
     private final ProductMapper productMapper;
 
     @Override
+    @SuppressWarnings("null")
     public ProductReadDTO nuevoProdcuto(ProductNewUpdateDTO nuevoProductoDTO)  {
         //Verifico primero que no haya un producto igual por medio del SKU
         Optional<Product> existeProducto = productRepository.findBySkuIgnoreCase(nuevoProductoDTO.getSku());
@@ -41,10 +43,10 @@ public class ProductServiceImpl implements ProductService{
         Product productillo = productMapper.toEntity(nuevoProductoDTO);
 
         //Guardo la entidad en la base de datos
-        Product productilloGuardado = productRepository.save(productillo);
+        Product saved = productRepository.save(productillo);
 
         //Mapeo a DTO usando MapStruct
-        ProductReadDTO productilloGuardadoDTO = productMapper.toDto(productilloGuardado);
+        ProductReadDTO productilloGuardadoDTO = productMapper.toDto(saved);
 
         return productilloGuardadoDTO;
     }
@@ -59,13 +61,16 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductReadDTO unProductoEspecifico(Long id) {
-        Product product = productRepository.findById(id)
+        Product product = productRepository.findById(Objects.requireNonNull(id, "id es obligatorio"))
                 .orElseThrow(() -> new ResourceNotFoundException("Producto con id " + id + " no encontrado"));
         return productMapper.toDto(product);
     }
 
     @Override
+    @SuppressWarnings("null")
     public ProductNewUpdateDTO actualizarProducto(Long id, ProductNewUpdateDTO productoActualizado) {
+        Objects.requireNonNull(id, "id es obligatorio");
+        Objects.requireNonNull(productoActualizado, "productoActualizado es obligatorio");
         Product productToUpdate = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Producto con id " + id + " no encontrado"));
 
@@ -88,7 +93,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public void borrarProducto(Long id) {
-        if (!productRepository.existsById(id)) {
+        if (!productRepository.existsById(Objects.requireNonNull(id, "id es obligatorio"))) {
             throw new ResourceNotFoundException("Producto con id " + id + " no encontrado");
         }
         productRepository.deleteById(id);

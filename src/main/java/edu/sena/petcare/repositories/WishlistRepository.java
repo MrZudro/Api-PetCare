@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
@@ -16,5 +17,5 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
     /**
      * pss si es necesario es una consulta útil para buscar la lista de un usuario
      */
-    // Optional<Wishlist> findByUserId(Long userId);
+    Optional<Wishlist> findByUserId(Long userId);
 }
