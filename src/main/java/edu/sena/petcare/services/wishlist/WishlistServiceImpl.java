@@ -1,7 +1,10 @@
 package edu.sena.petcare.services.wishlist;
 
+import edu.sena.petcare.dto.wishlist.WishlistCreateDTO;
 import edu.sena.petcare.dto.wishlist.WishlistNewUpdateDTO;
 import edu.sena.petcare.dto.wishlist.WishlistReadDTO;
+import edu.sena.petcare.dto.wishlist.WishlistUpdateDTO;
+import edu.sena.petcare.exceptions.DuplicateResourceException;
 import edu.sena.petcare.exceptions.ResourceNotFoundException;
 import edu.sena.petcare.mapper.WishlistMapper;
 import edu.sena.petcare.models.Product;
@@ -46,26 +49,36 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     @Transactional
-    public WishlistReadDTO create(WishlistNewUpdateDTO wishlistDTO) {
-        // 1. Validar User
-        User user = userRepository.findById(wishlistDTO.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + wishlistDTO.getUserId()));
-
-        // 2. Validar Productos
-        List<Product> products = productRepository.findAllById(wishlistDTO.getProductIds());
-        if (products.size() != wishlistDTO.getProductIds().size()) {
-            throw new ResourceNotFoundException("Uno o más productos no fueron encontrados.");
+    public WishlistReadDTO create(WishlistCreateDTO createDTO) {
+    // REGLA 1: Verificar si el usuario ya tiene una wishlist
+        if(wishlistRepository.existsByUserId(createDTO.getUserId())) {
+            throw new DuplicateResourceException("El usuario con id " + createDTO.getUserId() + " ya tiene una wishlist.");
         }
 
-        // 3. Crear Wishlist
+        // 1. Validar User
+        User user = userRepository.findById(createDTO.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + createDTO.getUserId()));
+
         Wishlist wishlist = new Wishlist();
         wishlist.setUser(user);
         wishlist.setCreateDate(LocalDateTime.now());
-        wishlist.setProducts(products); // Asigna la lista de productos
 
-        // 4. Actualizar el lado "dueño" (Product) de la relación ManyToMany
-        for (Product product : products) {
-            product.getWishlists().add(wishlist);
+        // REGLA 2: Aceptar lista vacía
+        // Verificamos si la lista NO es nula y NO está vacía antes de buscar productos
+        if (createDTO.getProductIds() != null && !createDTO.getProductIds().isEmpty()) {
+            List<Product> products = productRepository.findAllById(createDTO.getProductIds());
+            if (products.size() != createDTO.getProductIds().size()) {
+                throw new ResourceNotFoundException("Uno o más productos no fueron encontrados.");
+            }
+            wishlist.setProducts(products);
+
+            // Actualizar el lado "dueño" (Product)
+            for (Product product : products) {
+                product.getWishlists().add(wishlist);
+            }
+        } else {
+            // Si la lista es nula o vacía, solo asigna una lista vacía
+            wishlist.setProducts(new java.util.ArrayList<>());
         }
 
         Wishlist savedWishlist = wishlistRepository.save(wishlist);
@@ -74,7 +87,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     @Transactional
-    public WishlistReadDTO update(Long id, WishlistNewUpdateDTO wishlistDTO) {
+    public WishlistReadDTO update(Long id, WishlistUpdateDTO updateDTO) {
         // 1. Encontrar la Wishlist existente
         Wishlist wishlist = wishlistRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Wishlist no encontrada con id: " + id));
@@ -84,8 +97,8 @@ public class WishlistServiceImpl implements WishlistService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + wishlistDTO.getUserId()));
 
         // 3. Validar Productos nuevos
-        List<Product> newProducts = productRepository.findAllById(wishlistDTO.getProductIds());
-        if (newProducts.size() != wishlistDTO.getProductIds().size()) {
+        List<Product> newProducts = productRepository.findAllById(updateDTO.getProductIds());
+        if (!updateDTO.getProductIds().isEmpty() && newProducts.size() != updateDTO.getProductIds().size()) {
             throw new ResourceNotFoundException("Uno o más productos no fueron encontrados.");
         }
 
@@ -95,10 +108,12 @@ public class WishlistServiceImpl implements WishlistService {
         }
         wishlist.getProducts().clear();
 
-        // 5. Vincular productos nuevos
-        for (Product newProduct : newProducts) {
-            wishlist.getProducts().add(newProduct);
-            newProduct.getWishlists().add(wishlist);
+        // 5. Vincular productos nuevos (si la lista no está vacía)
+        if (!newProducts.isEmpty()) {
+            for (Product newProduct : newProducts) {
+                wishlist.getProducts().add(newProduct);
+                newProduct.getWishlists().add(wishlist);
+            }
         }
 
         wishlist.setUser(user);

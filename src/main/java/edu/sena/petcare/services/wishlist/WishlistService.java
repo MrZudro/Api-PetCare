@@ -1,17 +1,19 @@
 package edu.sena.petcare.services.wishlist;
 
-import edu.sena.petcare.dto.wishlist.WishlistNewUpdateDTO;
+import edu.sena.petcare.dto.wishlist.WishlistCreateDTO;
 import edu.sena.petcare.dto.wishlist.WishlistReadDTO;
+import edu.sena.petcare.dto.wishlist.WishlistUpdateDTO;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface WishlistService {
 
-    WishlistReadDTO create(WishlistNewUpdateDTO wishlistDTO);
+    WishlistReadDTO create(WishlistCreateDTO createDTO);
 
     List<WishlistReadDTO> findAll();
 
-    WishlistReadDTO update(Long id, WishlistNewUpdateDTO wishlistDTO);
+    WishlistReadDTO update(Long id, WishlistUpdateDTO updateDTO);
 
     WishlistReadDTO findById(Long id);
 

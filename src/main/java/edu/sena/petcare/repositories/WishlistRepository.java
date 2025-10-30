@@ -13,6 +13,8 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
     /*Consulta personalizada para filtrar por la fecha en que se guardó.*/
     List<Wishlist> findByCreateDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 
+    boolean existsByUserId(Long userId);
+
     /**
      * pss si es necesario es una consulta útil para buscar la lista de un usuario
      */

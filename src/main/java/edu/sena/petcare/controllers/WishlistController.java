@@ -1,6 +1,7 @@
 package edu.sena.petcare.controllers;
 
 
+import edu.sena.petcare.dto.wishlist.WishlistCreateDTO;
 import edu.sena.petcare.dto.wishlist.WishlistNewUpdateDTO;
 import edu.sena.petcare.dto.wishlist.WishlistReadDTO;
 import edu.sena.petcare.services.wishlist.WishlistService;
@@ -22,8 +23,8 @@ public class WishlistController {
     private final WishlistService wishlistService;
 
     @PostMapping
-    public ResponseEntity<WishlistReadDTO> create(@Valid @RequestBody WishlistNewUpdateDTO wishlistNewUpdateDTO) {
-        WishlistReadDTO createdWishlist = wishlistService.create(wishlistNewUpdateDTO);
+    public ResponseEntity<WishlistReadDTO> create(@Valid @RequestBody WishlistCreateDTO dto) {
+        WishlistReadDTO createdWishlist = wishlistService.create(dto);
         return new ResponseEntity<>(createdWishlist, HttpStatus.CREATED);
     }
 
@@ -54,13 +55,8 @@ public class WishlistController {
             @PathVariable Long id,
             @Valid @RequestBody WishlistNewUpdateDTO dto) {
 
-        WishlistReadDTO updatedWishlist = wishlistService.update(id, wishlistNewUpdateDTO);
+        WishlistReadDTO updatedWishlist = wishlistService.update(id, dto);
         return ResponseEntity.ok(updatedWishlist);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        wishlistService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
 }

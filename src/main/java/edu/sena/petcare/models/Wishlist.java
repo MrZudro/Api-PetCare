@@ -25,7 +25,7 @@ public class Wishlist {
 
     //relacion OneToMany con user
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "id_user", unique = true)
     private User user;
 
     //relacion ManyToMany con Product
