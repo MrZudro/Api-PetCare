@@ -1,4 +1,4 @@
-package edu.sena.petcare.dto.Vaccine;
+package edu.sena.petcare.dto.VaccinationHistory;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class VaccineReadDTO {
+public class VaccinationHistoryReadDTO {
     private Long id;
     private String nombre;
     private String descripcion;

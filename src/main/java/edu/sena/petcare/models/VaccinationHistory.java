@@ -10,8 +10,8 @@ import java.time.LocalDate;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "vaccine")
-public class Vaccine {
+@Table(name = "vaccinationhistory")
+public class VaccinationHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

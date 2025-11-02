@@ -1,15 +1,15 @@
 package edu.sena.petcare.mapper;
 
-import edu.sena.petcare.dto.Vaccine.VaccineCreateDTO;
-import edu.sena.petcare.dto.Vaccine.VaccineReadDTO;
-import edu.sena.petcare.dto.Vaccine.VaccineUpdateDTO;
-import edu.sena.petcare.models.Vaccine;
+import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryCreateDTO;
+import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryReadDTO;
+import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryUpdateDTO;
+import edu.sena.petcare.models.VaccinationHistory;
 import java.time.LocalDate;
 
-public class VaccineMapper {
+public class VaccinationHistoryMapper {
 
-    public static Vaccine toEntity(VaccineCreateDTO dto) {
-        Vaccine v = new Vaccine();
+    public static VaccinationHistory toEntity(VaccinationHistoryCreateDTO dto) {
+        VaccinationHistory v = new VaccinationHistory();
         v.setNombre(dto.getNombre());
         v.setDescripcion(dto.getDescripcion());
         v.setFechaAplicacion(LocalDate.parse(dto.getFechaAplicacion()));
@@ -17,8 +17,8 @@ public class VaccineMapper {
         return v;
     }
 
-    public static VaccineReadDTO toReadDTO(Vaccine entity) {
-        return new VaccineReadDTO(
+    public static VaccinationHistoryReadDTO toReadDTO(VaccinationHistory entity) {
+        return new VaccinationHistoryReadDTO(
                 entity.getId(),
                 entity.getNombre(),
                 entity.getDescripcion(),
@@ -27,7 +27,7 @@ public class VaccineMapper {
         );
     }
 
-    public static void updateEntity(Vaccine entity, VaccineUpdateDTO dto) {
+    public static void updateEntity(VaccinationHistory entity, VaccinationHistoryUpdateDTO dto) {
         entity.setNombre(dto.getNombre());
         entity.setDescripcion(dto.getDescripcion());
         entity.setFechaAplicacion(LocalDate.parse(dto.getFechaAplicacion()));
