@@ -2,7 +2,6 @@ package edu.sena.petcare.dto.VaccinationHistory;
 
 import lombok.*;
 
-//información de las vacuna.
 
 @AllArgsConstructor
 @NoArgsConstructor
