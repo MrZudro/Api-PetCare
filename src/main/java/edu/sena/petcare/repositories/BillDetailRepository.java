@@ -1,4 +1,4 @@
-public package edu.sena.petcare.repositories;
+package edu.sena.petcare.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import edu.sena.petcare.models.BillDetail;

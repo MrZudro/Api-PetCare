@@ -3,8 +3,6 @@ package edu.sena.petcare.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import edu.sena.petcare.models.Bill;
 
-import java.util.List;
-
 public interface BillRepository extends JpaRepository<Bill, Long> {
     // Método para consultar el historial de órdenes de un cliente/usuario.
     // Asumiendo que 'MethodPaymentCustomer' tiene una relación con el usuario/cliente.
