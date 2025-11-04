@@ -7,7 +7,7 @@ import edu.sena.petcare.exceptions.DuplicateResourceException;
 import edu.sena.petcare.exceptions.ResourceNotFoundException;
 import edu.sena.petcare.mapper.RaceMapper;
 import edu.sena.petcare.models.Race;
-import edu.sena.petcare.models.Specie;
+import edu.sena.petcare.models.Species;
 import edu.sena.petcare.models.enums.RaceStatus;
 import edu.sena.petcare.repositories.RaceRepository;
 import edu.sena.petcare.repositories.SpeciesRepository; // Repositorio de Species (asumido)

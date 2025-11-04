@@ -3,7 +3,7 @@ package edu.sena.petcare.controller;
 
 import edu.sena.petcare.dto.race.RaceNewUpdateDTO;
 import edu.sena.petcare.dto.race.RaceReadDTO;
-import edu.sena.petcare.services.RaceService;
+import edu.sena.petcare.services.race.RaceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
