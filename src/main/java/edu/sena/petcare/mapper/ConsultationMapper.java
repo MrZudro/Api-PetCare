@@ -7,7 +7,6 @@ import org.mapstruct.factory.Mappers;
 import edu.sena.petcare.dto.consultation.ConsultationNewDTO;
 import edu.sena.petcare.dto.consultation.ConsultationReadDTO;
 import edu.sena.petcare.models.Consultation;
-import edu.sena.petcare.models.enums.ConsultationStatus;
 
 import java.util.List;
 
