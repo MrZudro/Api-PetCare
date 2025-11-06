@@ -27,7 +27,7 @@ public class Race {
     //relacion OneToMany con Specie
     @ManyToOne
     @JoinColumn(name = "id_specie")
-    private Species especie;
+    private Specie especie;
 
     //relacion OneToMany con Pet
     @OneToMany(mappedBy = "raza")

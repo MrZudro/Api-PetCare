@@ -2,7 +2,6 @@ package edu.sena.petcare.models;
 
 import java.util.List;
 
-import edu.sena.petcare.models.enums.SpeciesStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table( name = "specie")
-public class Species {
+public class Specie {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +28,5 @@ public class Species {
     @OneToMany(mappedBy = "especie")
     private List<Race> razas;
 
-    // Campo clave para la "Eliminación Lógica"
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private SpeciesStatus status;
 
 }
