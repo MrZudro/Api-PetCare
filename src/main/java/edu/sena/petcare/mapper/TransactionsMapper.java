@@ -9,7 +9,7 @@ import edu.sena.petcare.models.Transactions;
 @Component
 public class TransactionsMapper {
 
-    public TransactionsReadDTO toReadDTO(Transactions transaction) {
+    public TransactionsReadDTO toDto(Transactions transaction) {
         if (transaction == null) {
             return null;
         }

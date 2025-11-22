@@ -9,7 +9,7 @@ import edu.sena.petcare.models.Specie;
 @Component
 public class SpecieMapper {
 
-    public SpecieReadDTO toReadDTO(Specie specie) {
+    public SpecieReadDTO toDto(Specie specie) {
         if (specie == null) {
             return null;
         }

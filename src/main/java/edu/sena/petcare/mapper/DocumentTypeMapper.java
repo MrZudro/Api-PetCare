@@ -9,7 +9,7 @@ import edu.sena.petcare.models.DocumentType;
 @Component
 public class DocumentTypeMapper {
 
-    public DocumentTypeReadDTO toReadDTO(DocumentType documentType) {
+    public DocumentTypeReadDTO toDto(DocumentType documentType) {
         if (documentType == null) {
             return null;
         }

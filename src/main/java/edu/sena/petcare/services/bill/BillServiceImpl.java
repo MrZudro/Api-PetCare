@@ -21,14 +21,14 @@ public class BillServiceImpl implements BillService {
     public List<BillReadDTO> getAll() {
         return billRepository.findAll()
                 .stream()
-                .map(billMapper::toReadDTO)
+                .map(billMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public BillReadDTO getById(Long id) {
         return billRepository.findById(id)
-                .map(billMapper::toReadDTO)
+                .map(billMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Bill not found with id: " + id));
     }
 }

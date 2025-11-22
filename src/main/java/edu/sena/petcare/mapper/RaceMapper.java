@@ -9,7 +9,7 @@ import edu.sena.petcare.models.Race;
 @Component
 public class RaceMapper {
 
-    public RaceReadDTO toReadDTO(Race race) {
+    public RaceReadDTO toDto(Race race) {
         if (race == null) {
             return null;
         }

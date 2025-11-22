@@ -9,7 +9,7 @@ import edu.sena.petcare.models.Neighborhood;
 @Component
 public class NeighborhoodMapper {
 
-    public NeighborhoodReadDTO toReadDTO(Neighborhood neighborhood) {
+    public NeighborhoodReadDTO toDto(Neighborhood neighborhood) {
         if (neighborhood == null) {
             return null;
         }

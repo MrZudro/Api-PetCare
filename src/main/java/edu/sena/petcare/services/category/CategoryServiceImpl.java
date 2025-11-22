@@ -21,14 +21,14 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryReadDTO> getAll() {
         return categoryRepository.findAll()
                 .stream()
-                .map(categoryMapper::toReadDTO)
+                .map(categoryMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public CategoryReadDTO getById(Long id) {
         return categoryRepository.findById(id)
-                .map(categoryMapper::toReadDTO)
+                .map(categoryMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
     }
 }

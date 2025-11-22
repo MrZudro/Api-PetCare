@@ -1,7 +1,6 @@
 package edu.sena.petcare.services.petconditions;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -21,14 +20,14 @@ public class PetConditionsServiceImpl implements PetConditionsService {
     public List<PetConditionsReadDTO> getAll() {
         return petConditionsRepository.findAll()
                 .stream()
-                .map(petConditionsMapper::toReadDTO)
-                .collect(Collectors.toList());
+                .map(petConditionsMapper::toDto)
+                .toList();
     }
 
     @Override
     public PetConditionsReadDTO getById(Long id) {
         return petConditionsRepository.findById(id)
-                .map(petConditionsMapper::toReadDTO)
+                .map(petConditionsMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("PetConditions not found with id: " + id));
     }
 }

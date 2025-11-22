@@ -9,7 +9,7 @@ import edu.sena.petcare.models.Locality;
 @Component
 public class LocalityMapper {
 
-    public LocalityReadDTO toReadDTO(Locality locality) {
+    public LocalityReadDTO toDto(Locality locality) {
         if (locality == null) {
             return null;
         }

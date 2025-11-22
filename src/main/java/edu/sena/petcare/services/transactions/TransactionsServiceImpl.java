@@ -1,7 +1,6 @@
 package edu.sena.petcare.services.transactions;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -21,14 +20,14 @@ public class TransactionsServiceImpl implements TransactionsService {
     public List<TransactionsReadDTO> getAll() {
         return transactionsRepository.findAll()
                 .stream()
-                .map(transactionsMapper::toReadDTO)
-                .collect(Collectors.toList());
+                .map(transactionsMapper::toDto)
+                .toList();
     }
 
     @Override
     public TransactionsReadDTO getById(Long id) {
         return transactionsRepository.findById(id)
-                .map(transactionsMapper::toReadDTO)
+                .map(transactionsMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
     }
 }

@@ -21,14 +21,14 @@ public class LocalityServiceImpl implements LocalityService {
     public List<LocalityReadDTO> getAll() {
         return localityRepository.findAll()
                 .stream()
-                .map(localityMapper::toReadDTO)
+                .map(localityMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public LocalityReadDTO getById(Long id) {
         return localityRepository.findById(id)
-                .map(localityMapper::toReadDTO)
+                .map(localityMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Locality not found with id: " + id));
     }
 }

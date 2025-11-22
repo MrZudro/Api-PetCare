@@ -9,7 +9,7 @@ import edu.sena.petcare.models.Bill;
 @Component
 public class BillMapper {
 
-    public BillReadDTO toReadDTO(Bill bill) {
+    public BillReadDTO toDto(Bill bill) {
         if (bill == null) {
             return null;
         }

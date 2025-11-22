@@ -1,7 +1,6 @@
 package edu.sena.petcare.services.specie;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -21,14 +20,14 @@ public class SpecieServiceImpl implements SpecieService {
     public List<SpecieReadDTO> getAll() {
         return specieRepository.findAll()
                 .stream()
-                .map(specieMapper::toReadDTO)
-                .collect(Collectors.toList());
+                .map(specieMapper::toDto)
+                .toList();
     }
 
     @Override
     public SpecieReadDTO getById(Long id) {
         return specieRepository.findById(id)
-                .map(specieMapper::toReadDTO)
+                .map(specieMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Specie not found with id: " + id));
     }
 }

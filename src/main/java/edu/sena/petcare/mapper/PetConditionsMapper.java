@@ -9,7 +9,7 @@ import edu.sena.petcare.models.PetConditions;
 @Component
 public class PetConditionsMapper {
 
-    public PetConditionsReadDTO toReadDTO(PetConditions petConditions) {
+    public PetConditionsReadDTO toDto(PetConditions petConditions) {
         if (petConditions == null) {
             return null;
         }

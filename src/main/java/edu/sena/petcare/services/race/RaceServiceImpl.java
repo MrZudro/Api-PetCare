@@ -1,7 +1,7 @@
 package edu.sena.petcare.services.race;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 import org.springframework.stereotype.Service;
 
@@ -21,14 +21,14 @@ public class RaceServiceImpl implements RaceService {
     public List<RaceReadDTO> getAll() {
         return raceRepository.findAll()
                 .stream()
-                .map(raceMapper::toReadDTO)
-                .collect(Collectors.toList());
+                .map(raceMapper::toDto)
+                .toList();
     }
 
     @Override
     public RaceReadDTO getById(Long id) {
         return raceRepository.findById(id)
-                .map(raceMapper::toReadDTO)
+                .map(raceMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Race not found with id: " + id));
     }
 }

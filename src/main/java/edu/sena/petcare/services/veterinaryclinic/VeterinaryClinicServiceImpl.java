@@ -1,7 +1,6 @@
 package edu.sena.petcare.services.veterinaryclinic;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -21,14 +20,14 @@ public class VeterinaryClinicServiceImpl implements VeterinaryClinicService {
     public List<VeterinaryClinicReadDTO> getAll() {
         return veterinaryClinicRepository.findAll()
                 .stream()
-                .map(veterinaryClinicMapper::toReadDTO)
-                .collect(Collectors.toList());
+                .map(veterinaryClinicMapper::toDto)
+                .toList();
     }
 
     @Override
     public VeterinaryClinicReadDTO getById(Long id) {
         return veterinaryClinicRepository.findById(id)
-                .map(veterinaryClinicMapper::toReadDTO)
+                .map(veterinaryClinicMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("VeterinaryClinic not found with id: " + id));
     }
 }

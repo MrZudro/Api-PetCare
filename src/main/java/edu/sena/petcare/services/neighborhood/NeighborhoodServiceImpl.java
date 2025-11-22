@@ -21,14 +21,14 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     public List<NeighborhoodReadDTO> getAll() {
         return neighborhoodRepository.findAll()
                 .stream()
-                .map(neighborhoodMapper::toReadDTO)
+                .map(neighborhoodMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public NeighborhoodReadDTO getById(Long id) {
         return neighborhoodRepository.findById(id)
-                .map(neighborhoodMapper::toReadDTO)
+                .map(neighborhoodMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Neighborhood not found with id: " + id));
     }
 }

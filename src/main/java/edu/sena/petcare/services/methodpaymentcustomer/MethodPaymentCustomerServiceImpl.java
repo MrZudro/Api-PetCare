@@ -21,14 +21,14 @@ public class MethodPaymentCustomerServiceImpl implements MethodPaymentCustomerSe
     public List<MethodPaymentCustomerReadDTO> getAll() {
         return methodPaymentCustomerRepository.findAll()
                 .stream()
-                .map(methodPaymentCustomerMapper::toReadDTO)
+                .map(methodPaymentCustomerMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public MethodPaymentCustomerReadDTO getById(Long id) {
         return methodPaymentCustomerRepository.findById(id)
-                .map(methodPaymentCustomerMapper::toReadDTO)
+                .map(methodPaymentCustomerMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("MethodPaymentCustomer not found with id: " + id));
     }
 }

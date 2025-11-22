@@ -1,7 +1,6 @@
 package edu.sena.petcare.services.subcategory;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -21,14 +20,14 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     public List<SubcategoryReadDTO> getAll() {
         return subcategoryRepository.findAll()
                 .stream()
-                .map(subcategoryMapper::toReadDTO)
-                .collect(Collectors.toList());
+                .map(subcategoryMapper::toDto)
+                .toList();
     }
 
     @Override
     public SubcategoryReadDTO getById(Long id) {
         return subcategoryRepository.findById(id)
-                .map(subcategoryMapper::toReadDTO)
+                .map(subcategoryMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Subcategory not found with id: " + id));
     }
 }

@@ -9,7 +9,7 @@ import edu.sena.petcare.models.VeterinaryClinic;
 @Component
 public class VeterinaryClinicMapper {
 
-    public VeterinaryClinicReadDTO toReadDTO(VeterinaryClinic clinic) {
+    public VeterinaryClinicReadDTO toDto(VeterinaryClinic clinic) {
         if (clinic == null) {
             return null;
         }

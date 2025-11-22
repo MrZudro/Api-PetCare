@@ -9,7 +9,7 @@ import edu.sena.petcare.models.MethodPaymentCustomer;
 @Component
 public class MethodPaymentCustomerMapper {
 
-    public MethodPaymentCustomerReadDTO toReadDTO(MethodPaymentCustomer method) {
+    public MethodPaymentCustomerReadDTO toDto(MethodPaymentCustomer method) {
         if (method == null) {
             return null;
         }

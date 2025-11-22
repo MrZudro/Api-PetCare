@@ -21,14 +21,14 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
     public List<DocumentTypeReadDTO> getAll() {
         return documentTypeRepository.findAll()
                 .stream()
-                .map(documentTypeMapper::toReadDTO)
+                .map(documentTypeMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public DocumentTypeReadDTO getById(Long id) {
         return documentTypeRepository.findById(id)
-                .map(documentTypeMapper::toReadDTO)
+                .map(documentTypeMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("DocumentType not found with id: " + id));
     }
 }
