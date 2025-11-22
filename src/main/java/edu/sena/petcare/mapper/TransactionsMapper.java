@@ -15,9 +15,9 @@ public class TransactionsMapper {
         }
         TransactionsReadDTO dto = new TransactionsReadDTO();
         dto.setId(transaction.getId());
-        dto.setTotalValue(transaction.getTotalValue());
+        dto.setTotalValue(transaction.getAmount());
         dto.setAnswerJsonGateway(transaction.getAnswerJsonGateway());
-        dto.setTransactionDate(transaction.getTransactionDate());
+        dto.setTransactionDate(transaction.getDateTransaction());
         return dto;
     }
 
@@ -26,7 +26,7 @@ public class TransactionsMapper {
             return null;
         }
         Transactions transaction = new Transactions();
-        transaction.setTotalValue(dto.getTotalValue());
+        transaction.setAmount(dto.getTotalValue());
         transaction.setAnswerJsonGateway(dto.getAnswerJsonGateway());
         return transaction;
     }
@@ -35,7 +35,7 @@ public class TransactionsMapper {
         if (dto == null || transaction == null) {
             return;
         }
-        transaction.setTotalValue(dto.getTotalValue());
+        transaction.setAmount(dto.getTotalValue());
         transaction.setAnswerJsonGateway(dto.getAnswerJsonGateway());
     }
 }
