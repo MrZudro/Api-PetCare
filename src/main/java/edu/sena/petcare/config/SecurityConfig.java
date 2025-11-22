@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,13 +23,7 @@ import java.util.List;
 public class SecurityConfig {
 
         private final JwtAuthenticationFilter jwtAuthFilter;
-        private final AuthenticationProvider authenticationProvider;
-
-        // Constantes
-        private static final String URL_APPOINTMENT = "/Appointment/**";
-        private static final String URL_CUSTOMER = "/Customer/**";
-        private static final String URL_PET = "/Pet/**";
-        private static final String AUTHORITY_CASHIER = "CARGO_CASHIER";
+        // AuthenticationProvider removed - Spring Security auto-configures it
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -38,71 +31,35 @@ public class SecurityConfig {
                                 .csrf(csrf -> csrf.disable())
                                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                                 .authorizeHttpRequests(auth -> auth
+                                                // ⚠️ WARNING: DEVELOPMENT CONFIGURATION ONLY ⚠️
+                                                // This configuration permits ALL requests for Swagger testing
+                                                // REMOVE OR RESTRICT BEFORE DEPLOYING TO PRODUCTION
+
                                                 // Swagger UI - MUST BE FIRST
                                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**",
-                                                                "/swagger-ui.html")
+                                                                "/swagger-ui.html", "/swagger-resources/**",
+                                                                "/webjars/**")
                                                 .permitAll()
 
-                                                // Public Auth Endpoints - MUST BE BEFORE OTHER RULES
+                                                // Public Auth Endpoints
                                                 .requestMatchers("/auth/**").permitAll()
 
                                                 // Public Endpoints (GET)
                                                 .requestMatchers(HttpMethod.GET, "/products/**", "/services/**",
                                                                 "/veterinaryClinic/**",
                                                                 "/subCategory/**", "/Category/**", "/specie/**",
-                                                                "/race/**", "/neighborhood/**",
+                                                                "/race/**",
+                                                                "/neighborhood/**",
                                                                 "/locality/**", "/documentType/**")
                                                 .permitAll()
 
-                                                // Customer Role
-                                                .requestMatchers("/Consultation/**", "/petConditions/**",
-                                                                "/schedule/**",
-                                                                "/vaccinationHistory/**", "/wishlist/**")
-                                                .hasAuthority("CUSTOMER")
-                                                .requestMatchers(URL_APPOINTMENT, URL_CUSTOMER,
-                                                                "/MethodPaymentCustomer/**", URL_PET,
-                                                                "/User/**", "/Wishlist/**")
-                                                .hasAuthority("CUSTOMER")
-
-                                                // Admin Role
-                                                // GET only
-                                                .requestMatchers(HttpMethod.GET, "/Bill/**", URL_CUSTOMER, URL_PET,
-                                                                "/Transactions/**",
-                                                                "/User/**")
-                                                .hasAuthority("ADMIN")
-                                                // Full Access
-                                                .requestMatchers(URL_APPOINTMENT, "/Category/**", "/Conditions/**",
-                                                                "/Employee/**",
-                                                                "/VeterinaryClinic/**", "/Product/**", "/Schedule/**",
-                                                                "/Subcategory/**",
-                                                                "/Services/**")
-                                                .hasAuthority("ADMIN")
-
-                                                // Employee (VETERINARIAN)
-                                                // GET only
-                                                .requestMatchers(HttpMethod.GET, URL_APPOINTMENT, "/Consultation/**",
-                                                                URL_CUSTOMER,
-                                                                URL_PET, "/PetConditions/**", "/Schedule/**")
-                                                .hasAuthority("CARGO_VETERINARIAN")
-                                                // Full Access
-                                                .requestMatchers("/VaccinationHistory/**")
-                                                .hasAuthority("CARGO_VETERINARIAN")
-
-                                                // Employee (CASHIER)
-                                                // GET only
-                                                .requestMatchers(HttpMethod.GET, URL_APPOINTMENT, "/transactions/**",
-                                                                "/bill/**")
-                                                .hasAuthority(AUTHORITY_CASHIER)
-                                                // POST and GET
-                                                .requestMatchers(HttpMethod.GET, URL_PET, URL_CUSTOMER)
-                                                .hasAuthority(AUTHORITY_CASHIER)
-                                                .requestMatchers(HttpMethod.POST, URL_PET, URL_CUSTOMER)
-                                                .hasAuthority(AUTHORITY_CASHIER)
-
-                                                .anyRequest().authenticated())
-                                .sessionManagement(session -> session
-                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .authenticationProvider(authenticationProvider)
+                                                // ⚠️ DEVELOPMENT ONLY: Permit all other requests for Swagger testing
+                                                // TODO: Remove this line before production deployment
+                                                .anyRequest().permitAll())
+                                .sessionManagement(
+                                                session -> session
+                                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                // AuthenticationProvider removed - Spring Security auto-configures it
                                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();
