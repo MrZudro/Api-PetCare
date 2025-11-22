@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import edu.sena.petcare.dto.employee.EmployeeNewUpdateDTO;
 import edu.sena.petcare.dto.employee.EmployeeReadDTO;
 import edu.sena.petcare.models.Employee;
+import edu.sena.petcare.models.enums.EmployeeCargo;
 import edu.sena.petcare.utility.ListaMappeo;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class EmployeeMapper {
                 dto.setNeighborhoodId(entity.getBarrioCliente() != null ? entity.getBarrioCliente().getId() : null);
                 dto.setEmployeeCode(entity.getEmployeeCode());
                 dto.setSalary(entity.getSalary());
-                dto.setCargo(entity.getCargo());
+                dto.setCargo(entity.getCargo() != null ? entity.getCargo().name() : null);
                 return dto;
         }
 
@@ -46,7 +47,9 @@ public class EmployeeMapper {
                 entity.setPhone(dto.getPhone());
                 entity.setEmployeeCode(dto.getEmployeeCode());
                 entity.setSalary(dto.getSalary());
-                entity.setCargo(dto.getCargo());
+                if (dto.getCargo() != null) {
+                        entity.setCargo(EmployeeCargo.valueOf(dto.getCargo()));
+                }
                 // Relationships handled in Service
                 return entity;
         }
@@ -76,7 +79,7 @@ public class EmployeeMapper {
                 if (dto.getSalary() != null)
                         entity.setSalary(dto.getSalary());
                 if (dto.getCargo() != null)
-                        entity.setCargo(dto.getCargo());
+                        entity.setCargo(EmployeeCargo.valueOf(dto.getCargo()));
                 // Relationships handled in Service
         }
 

@@ -3,6 +3,7 @@ package edu.sena.petcare.models;
 import java.math.BigDecimal;
 import java.util.List;
 
+import edu.sena.petcare.models.enums.EmployeeCargo;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,8 +23,8 @@ public class Employee extends User{
     @Column(name = "salary", precision = 10, scale = 2, nullable = false)
     private BigDecimal salary;
 
-    @Column(length = 150, nullable = false)
-    private String cargo;
+    @Enumerated(EnumType.STRING)
+    private EmployeeCargo cargo;
 
     //relacion con Bill
     @OneToMany(mappedBy = "empleado")

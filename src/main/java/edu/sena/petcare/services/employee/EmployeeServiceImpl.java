@@ -14,6 +14,7 @@ import edu.sena.petcare.mapper.EmployeeMapper;
 import edu.sena.petcare.models.DocumentType;
 import edu.sena.petcare.models.Employee;
 import edu.sena.petcare.models.Neighborhood;
+import edu.sena.petcare.models.enums.EmployeeCargo;
 import edu.sena.petcare.models.enums.Rol;
 import edu.sena.petcare.repositories.DocumentTypeRepository;
 import edu.sena.petcare.repositories.EmployeeRepository;
@@ -86,7 +87,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         employee.setEmployeeCode(dto.getEmployeeCode());
         employee.setSalary(dto.getSalary());
-        employee.setCargo(dto.getCargo());
+        employee.setCargo(EmployeeCargo.valueOf(dto.getCargo()));
 
         DocumentType docType = documentTypeRepository.findById(dto.getDocumentTypeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Tipo de documento no encontrado con id: " + dto.getDocumentTypeId()));
