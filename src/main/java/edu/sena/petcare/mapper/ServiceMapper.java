@@ -1,15 +1,16 @@
 package edu.sena.petcare.mapper;
 
+import org.springframework.stereotype.Component;
 import edu.sena.petcare.dto.service.ServiceNewUpdateDTO;
 import edu.sena.petcare.dto.service.ServiceReadDTO;
 import edu.sena.petcare.models.Services;
-
+import edu.sena.petcare.utility.ListaMappeo;
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Component
 public class ServiceMapper {
 
-    public static ServiceReadDTO toDto(Services service) {
+    public ServiceReadDTO toDto(Services service) {
         if (service == null) {
             return null;
         }
@@ -22,16 +23,7 @@ public class ServiceMapper {
         return dto;
     }
 
-    public static List<ServiceReadDTO> toDtoList(List<Services> services) {
-        if (services == null) {
-            return null;
-        }
-        return services.stream()
-                .map(ServiceMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public static Services toEntity(ServiceNewUpdateDTO dto) {
+    public Services toEntity(ServiceNewUpdateDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -43,13 +35,21 @@ public class ServiceMapper {
         return service;
     }
 
-    public static void updateEntityFromDto(ServiceNewUpdateDTO dto, Services service) {
+    public void updateEntity(ServiceNewUpdateDTO dto, Services service) {
         if (dto == null || service == null) {
             return;
         }
-        service.setName(dto.getName());
-        service.setDescription(dto.getDescription());
-        service.setStatus(dto.getStatus());
-        service.setPicture(dto.getPicture());
+        if (dto.getName() != null)
+            service.setName(dto.getName());
+        if (dto.getDescription() != null)
+            service.setDescription(dto.getDescription());
+        if (dto.getStatus() != null)
+            service.setStatus(dto.getStatus());
+        if (dto.getPicture() != null)
+            service.setPicture(dto.getPicture());
+    }
+
+    public List<ServiceReadDTO> toDtoList(List<Services> entities) {
+        return ListaMappeo.toDtoList(entities, this::toDto);
     }
 }

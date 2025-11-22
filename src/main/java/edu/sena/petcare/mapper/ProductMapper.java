@@ -1,42 +1,104 @@
+
 package edu.sena.petcare.mapper;
 
-import java.util.List;
-
-import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
-
+import org.springframework.stereotype.Component;
 import edu.sena.petcare.dto.product.ProductNewUpdateDTO;
 import edu.sena.petcare.dto.product.ProductReadDTO;
 import edu.sena.petcare.models.Product;
+import edu.sena.petcare.models.enums.StatusService;
+import edu.sena.petcare.utility.ListaMappeo;
+import java.util.Collections;
+import java.util.List;
 
+@Component
+public class ProductMapper {
 
-@Mapper
-public interface ProductMapper {
+    public ProductReadDTO toDto(Product entity) {
+        if (entity == null) {
+            return null;
+        }
+        ProductReadDTO dto = new ProductReadDTO();
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        dto.setPicture(entity.getPicture());
+        dto.setBrand(entity.getBrand());
+        dto.setPrice(entity.getPrice());
 
-    //  0. Obtencion del mapper en tiempo de compilacion, tipo Standalone
-    ProductMapper mapper = Mappers.getMapper(ProductMapper.class);
-    
-    // 1. Mapeo de Entidad a DTO de Lectura
-    @Mapping(target = "subcategoriesIds", expression = "java(entity.getProductSubcategories().stream().map(ps -> ps.getSubcategory().getId()).toList())")
-    ProductReadDTO toDto(Product entity);
-    List<ProductReadDTO> toDtoList(List<Product> entities);
+        List<Long> subcategoryIds = entity.getProductSubcategories() == null
+                ? Collections.emptyList()
+                : entity.getProductSubcategories().stream()
+                        .map(ps -> ps.getSubcategory().getId())
+                        .toList();
+        dto.setSubcategoriesIds(subcategoryIds);
 
-    // 2. Mapeo de DTO de Solicitud a Entidad (para CREAR/ACTUALIZAR)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "productSubcategories", ignore = true) // Se maneja en el servicio
-    @Mapping(target = "billDetails", ignore = true) // Inicialmente vacío
-    @Mapping(target = "wishlists", ignore = true)   // Inicialmente vacío
-    @Mapping(target = "isActive", constant = "ACTIVE")  // Nuevo producto siempre activo
-    Product toEntity(ProductNewUpdateDTO dto);
-    
-    // 3. Método para actualizar una Entidad existente
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "productSubcategories", ignore = true) // Se maneja en el servicio
-    @Mapping(target = "billDetails", ignore = true) // No se modifica
-    @Mapping(target = "wishlists", ignore = true)   // No se modifica
-    void updateEntity(ProductNewUpdateDTO dto, @MappingTarget Product entity);
+        return dto;
+    }
 
-    // 4. Mapeo de Entidad a DTO de Actualización
-    @Mapping(target = "subcategoriaIds", expression = "java(entity.getProductSubcategories().stream().map(ps -> ps.getSubcategory().getId()).toList())")
-    ProductNewUpdateDTO toUpdateDto(Product entity);
+    public Product toEntity(ProductNewUpdateDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        Product entity = new Product();
+        entity.setName(dto.getName());
+        entity.setPicture(dto.getPicture());
+        entity.setBrand(dto.getBrand());
+        entity.setDescription(dto.getDescription());
+        entity.setSku(dto.getSku());
+        entity.setPrice(dto.getPrice());
+        entity.setStock(dto.getStock());
+        entity.setIsActive(StatusService.ACTIVE);
+        // Subcategories handled in Service
+        return entity;
+    }
+
+    public void updateEntity(ProductNewUpdateDTO dto, Product entity) {
+        if (dto == null || entity == null) {
+            return;
+        }
+        if (dto.getName() != null)
+            entity.setName(dto.getName());
+        if (dto.getPicture() != null)
+            entity.setPicture(dto.getPicture());
+        if (dto.getBrand() != null)
+            entity.setBrand(dto.getBrand());
+        if (dto.getDescription() != null)
+            entity.setDescription(dto.getDescription());
+        if (dto.getSku() != null)
+            entity.setSku(dto.getSku());
+        if (dto.getPrice() != null)
+            entity.setPrice(dto.getPrice());
+        if (dto.getStock() != null)
+            entity.setStock(dto.getStock());
+        if (dto.getIsActive() != null)
+            entity.setIsActive(dto.getIsActive());
+        // Subcategories handled in Service
+    }
+
+    public ProductNewUpdateDTO toUpdateDto(Product entity) {
+        if (entity == null) {
+            return null;
+        }
+        ProductNewUpdateDTO dto = new ProductNewUpdateDTO();
+        dto.setName(entity.getName());
+        dto.setPicture(entity.getPicture());
+        dto.setBrand(entity.getBrand());
+        dto.setDescription(entity.getDescription());
+        dto.setSku(entity.getSku());
+        dto.setPrice(entity.getPrice());
+        dto.setStock(entity.getStock());
+        dto.setIsActive(entity.getIsActive());
+
+        List<Long> subcategoryIds = entity.getProductSubcategories() == null
+                ? Collections.emptyList()
+                : entity.getProductSubcategories().stream()
+                        .map(ps -> ps.getSubcategory().getId())
+                        .toList();
+        dto.setSubcategoriaIds(subcategoryIds);
+
+        return dto;
+    }
+
+    public List<ProductReadDTO> toDtoList(List<Product> entities) {
+        return ListaMappeo.toDtoList(entities, this::toDto);
+    }
 }

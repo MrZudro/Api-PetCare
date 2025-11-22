@@ -5,7 +5,6 @@ import edu.sena.petcare.dto.consultation.ConsultationReadDTO;
 import edu.sena.petcare.exceptions.ResourceNotFoundException;
 import edu.sena.petcare.mapper.ConsultationMapper;
 import edu.sena.petcare.models.Consultation;
-import edu.sena.petcare.models.enums.ConsultationStatus;
 
 // Repositorios requeridos (Descomentados)
 import edu.sena.petcare.repositories.ConsultationRepository;
@@ -26,17 +25,18 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     private final ConsultationRepository consultationRepository;
     private final ConsultationMapper consultationMapper;
-    
+
     // Repositorios de dependencias inyectados
     private final EmployeeRepository employeeRepository;
     private final VeterinaryClinicRepository veterinaryClinicRepository;
     private final PetRepository petRepository;
-    
+
     private static final String NOT_FOUND_MSG = "Consulta con ID %d no encontrada";
 
     /**
      * @Documented Crea un nuevo registro de consulta.
-     * Asigna entidades relacionadas y la fecha/hora si no se proporciona.
+     *             Asigna entidades relacionadas y la fecha/hora si no se
+     *             proporciona.
      * @param dto DTO de la consulta.
      * @return DTO de lectura de la consulta creada.
      */
@@ -48,24 +48,27 @@ public class ConsultationServiceImpl implements ConsultationService {
 
         // 2. Asignar Entidades relacionadas (Validación de existencia)
         consultation.setEmployee(employeeRepository.findById(dto.getEmployeeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Empleado/Veterinario con ID " + dto.getEmployeeId() + " no encontrado")));
-        
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Empleado/Veterinario con ID " + dto.getEmployeeId() + " no encontrado")));
+
         consultation.setVeterinaryClinic(veterinaryClinicRepository.findById(dto.getVeterinaryClinicId())
-                .orElseThrow(() -> new ResourceNotFoundException("Clínica con ID " + dto.getVeterinaryClinicId() + " no encontrada")));
-        
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Clínica con ID " + dto.getVeterinaryClinicId() + " no encontrada")));
+
         consultation.setPet(petRepository.findById(dto.getPetId())
-                .orElseThrow(() -> new ResourceNotFoundException("Mascota con ID " + dto.getPetId() + " no encontrada")));
-        
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Mascota con ID " + dto.getPetId() + " no encontrada")));
+
         // 3. Asignar Fecha/Hora si no se proporciona (Registro en tiempo real)
         if (dto.getConsultationDateTime() == null) {
             consultation.setConsultationDateTime(LocalDateTime.now());
         } else {
             consultation.setConsultationDateTime(dto.getConsultationDateTime());
         }
-        
+
         // 4. Guardar y Mapear a DTO de Lectura
         Consultation savedConsultation = consultationRepository.save(consultation);
-        return consultationMapper.toReadDto(savedConsultation);
+        return consultationMapper.toDto(savedConsultation);
     }
 
     /**
@@ -78,7 +81,7 @@ public class ConsultationServiceImpl implements ConsultationService {
     public ConsultationReadDTO getConsultationById(Long id) {
         Consultation consultation = consultationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(NOT_FOUND_MSG, id)));
-        return consultationMapper.toReadDto(consultation);
+        return consultationMapper.toDto(consultation);
     }
 
     /**
@@ -89,7 +92,7 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Transactional(readOnly = true)
     public List<ConsultationReadDTO> getAllConsultations() {
         List<Consultation> consultations = consultationRepository.findAll();
-        return consultationMapper.toReadDtoList(consultations);
+        return consultationMapper.toDtoList(consultations);
     }
 
     /**
@@ -101,6 +104,6 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Transactional(readOnly = true)
     public List<ConsultationReadDTO> getConsultationHistoryByPet(Long petId) {
         List<Consultation> consultations = consultationRepository.findByPetIdOrderByConsultationDateTimeDesc(petId);
-        return consultationMapper.toReadDtoList(consultations);
+        return consultationMapper.toDtoList(consultations);
     }
 }

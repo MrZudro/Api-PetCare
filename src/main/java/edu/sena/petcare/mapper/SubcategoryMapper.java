@@ -1,37 +1,47 @@
 package edu.sena.petcare.mapper;
 
-import java.util.List;
-
-import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
-
+import org.springframework.stereotype.Component;
 import edu.sena.petcare.dto.subcategory.SubcategoryNewUpdateDTO;
 import edu.sena.petcare.dto.subcategory.SubcategoryReadDTO;
 import edu.sena.petcare.models.Subcategory;
+import edu.sena.petcare.utility.ListaMappeo;
+import java.util.List;
 
-@Mapper
-public interface SubcategoryMapper {
+@Component
+public class SubcategoryMapper {
 
-    // Obtención del mapper en tiempo de compilación (Standalone)
-    SubcategoryMapper INSTANCE = Mappers.getMapper(SubcategoryMapper.class);
+    public SubcategoryReadDTO toDto(Subcategory entity) {
+        if (entity == null) {
+            return null;
+        }
+        SubcategoryReadDTO dto = new SubcategoryReadDTO();
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        dto.setCategoryId(entity.getCategoria() != null ? entity.getCategoria().getId() : null);
+        dto.setCategoryName(entity.getCategoria() != null ? entity.getCategoria().getName() : null);
+        return dto;
+    }
 
-    // Mapeo de Entidad a DTO de Lectura
-    @Mapping(target = "categoryId", source = "categoria.id")
-    @Mapping(target = "categoryName", source = "categoria.name")
-    SubcategoryReadDTO toDto(Subcategory entity);
-    
-    // Mapeo de lista de entidades a lista de DTOs
-    List<SubcategoryReadDTO> toDtoList(List<Subcategory> entities);
+    public Subcategory toEntity(SubcategoryNewUpdateDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        Subcategory entity = new Subcategory();
+        entity.setName(dto.getName());
+        // Category relationship handled in Service
+        return entity;
+    }
 
-    // Mapeo de DTO de Creación/Actualización a Entidad
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "categoria", ignore = true)  // Se maneja en el servicio con categoryId
-    @Mapping(target = "productSubcategories", ignore = true)  // Se maneja en el servicio
-    Subcategory toEntity(SubcategoryNewUpdateDTO dto);
-    
-    // Actualización de Entidad existente desde DTO
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "categoria", ignore = true)  // Se maneja en el servicio con categoryId
-    @Mapping(target = "productSubcategories", ignore = true)  // Se maneja en el servicio
-    void updateEntityFromDto(SubcategoryNewUpdateDTO dto, @MappingTarget Subcategory entity);
+    public void updateEntity(SubcategoryNewUpdateDTO dto, Subcategory entity) {
+        if (dto == null || entity == null) {
+            return;
+        }
+        if (dto.getName() != null)
+            entity.setName(dto.getName());
+        // Category relationship handled in Service
+    }
+
+    public List<SubcategoryReadDTO> toDtoList(List<Subcategory> entities) {
+        return ListaMappeo.toDtoList(entities, this::toDto);
+    }
 }

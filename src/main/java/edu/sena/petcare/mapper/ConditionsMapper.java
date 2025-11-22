@@ -1,54 +1,51 @@
 package edu.sena.petcare.mapper;
 
+import org.springframework.stereotype.Component;
 import edu.sena.petcare.dto.condition.ConditionsDTO;
 import edu.sena.petcare.models.Conditions;
+import edu.sena.petcare.utility.ListaMappeo;
+import java.util.List;
 
+@Component
 public class ConditionsMapper {
 
-    private ConditionsMapper(){}
-
-    public static ConditionsDTO toDTO(Conditions conditions){
-        if(conditions == null){
+    public ConditionsDTO toDTO(Conditions conditions) {
+        if (conditions == null) {
             return null;
-        } 
+        }
 
         ConditionsDTO dto = new ConditionsDTO();
-
-        //Mapeo simple
         dto.setName(conditions.getName());
         dto.setDescription(conditions.getDescription());
         dto.setIcon(conditions.getIcon());
-
-        //retornamos el dto que ha sido setteado
         return dto;
     }
 
-    public static Conditions toEntity(ConditionsDTO dto){
-        if(dto == null){
+    public Conditions toEntity(ConditionsDTO dto) {
+        if (dto == null) {
             return null;
         }
 
-        //Creamos una entidad vacia y nuevecita
         Conditions nueva = new Conditions();
-
-        //Mapeo simple
         nueva.setName(dto.getName());
         nueva.setDescription(dto.getDescription());
         nueva.setIcon(dto.getIcon());
-        nueva.setId(null);
-
-        //retornamos la entidad que ha sido setteada
         return nueva;
     }
 
-    public static void updateEntity(ConditionsDTO dto, Conditions conditions){
-        if(dto == null || conditions == null){
+    public void updateEntity(ConditionsDTO dto, Conditions conditions) {
+        if (dto == null || conditions == null) {
             return;
         }
+        if (dto.getName() != null)
+            conditions.setName(dto.getName());
+        if (dto.getDescription() != null)
+            conditions.setDescription(dto.getDescription());
+        if (dto.getIcon() != null)
+            conditions.setIcon(dto.getIcon());
+    }
 
-        //Mapeo simple
-        conditions.setName(dto.getName());
-        conditions.setDescription(dto.getDescription());
-        conditions.setIcon(dto.getIcon());
+    public List<ConditionsDTO> toDtoList(List<Conditions> entities) {
+        return ListaMappeo.toDtoList(entities, this::toDTO);
     }
 }

@@ -12,52 +12,62 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
- 
 
 @Service
 @RequiredArgsConstructor
 public class ServicesServiceImpl implements ServicesService {
 
     private final ServicesRepository servicesRepository;
+    private final ServiceMapper serviceMapper;
 
     @Override
-    @SuppressWarnings("null")
     public ServiceReadDTO createService(ServiceNewUpdateDTO serviceNewUpdateDTO) {
-        Assert.notNull(serviceNewUpdateDTO, "serviceNewUpdateDTO es obligatorio");
-        Services service = ServiceMapper.toEntity(serviceNewUpdateDTO);
-        Services savedService = Objects.requireNonNull(servicesRepository.save(service));
-        return ServiceMapper.toDto(savedService);
+        if (serviceNewUpdateDTO == null) {
+            throw new IllegalArgumentException("serviceNewUpdateDTO es obligatorio");
+        }
+        Services service = serviceMapper.toEntity(serviceNewUpdateDTO);
+        Services savedService = servicesRepository.save(service);
+        return serviceMapper.toDto(savedService);
     }
 
     @Override
     public List<ServiceReadDTO> getAllServices() {
         List<Services> services = servicesRepository.findAll();
-        return ServiceMapper.toDtoList(services);
+        return serviceMapper.toDtoList(services);
     }
 
     @Override
     public ServiceReadDTO getServiceById(Long id) {
-        Services service = servicesRepository.findById(Objects.requireNonNull(id, "id es obligatorio"))
+        if (id == null) {
+            throw new IllegalArgumentException("id es obligatorio");
+        }
+        Services service = servicesRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Servicio con id " + id + " no encontrado"));
-        return ServiceMapper.toDto(service);
+        return serviceMapper.toDto(service);
     }
 
     @Override
-    @SuppressWarnings("null")
     public ServiceReadDTO updateService(Long id, ServiceNewUpdateDTO serviceNewUpdateDTO) {
-        Objects.requireNonNull(id, "id es obligatorio");
-        Objects.requireNonNull(serviceNewUpdateDTO, "serviceNewUpdateDTO es obligatorio");
+        if (id == null) {
+            throw new IllegalArgumentException("id es obligatorio");
+        }
+        if (serviceNewUpdateDTO == null) {
+            throw new IllegalArgumentException("serviceNewUpdateDTO es obligatorio");
+        }
         Services serviceToUpdate = servicesRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Servicio con id " + id + " no encontrado"));
 
-        ServiceMapper.updateEntityFromDto(serviceNewUpdateDTO, serviceToUpdate);
+        serviceMapper.updateEntity(serviceNewUpdateDTO, serviceToUpdate);
         Services updatedService = servicesRepository.save(serviceToUpdate);
-        return ServiceMapper.toDto(updatedService);
+        return serviceMapper.toDto(updatedService);
     }
 
     @Override
     public void deleteService(Long id) {
-        if (!servicesRepository.existsById(Objects.requireNonNull(id, "id es obligatorio"))) {
+        if (id == null) {
+            throw new IllegalArgumentException("id es obligatorio");
+        }
+        if (!servicesRepository.existsById(id)) {
             throw new ResourceNotFoundException("Servicio con id " + id + " no encontrado");
         }
         servicesRepository.deleteById(id);
@@ -65,7 +75,10 @@ public class ServicesServiceImpl implements ServicesService {
 
     @Override
     public List<ServiceReadDTO> getServicesByClinicId(Long clinicId) {
-        List<Services> services = servicesRepository.findServicesByClinicId(Objects.requireNonNull(clinicId, "clinicId es obligatorio"));
-        return ServiceMapper.toDtoList(services);
+        if (clinicId == null) {
+            throw new IllegalArgumentException("clinicId es obligatorio");
+        }
+        List<Services> services = servicesRepository.findServicesByClinicId(clinicId);
+        return serviceMapper.toDtoList(services);
     }
 }

@@ -14,43 +14,60 @@ import lombok.*;
 
 @Service
 @RequiredArgsConstructor
-public class ConditionsServiceImpl implements ConditionsService{
+public class ConditionsServiceImpl implements ConditionsService {
 
     private final ConditionsRepository conditionsRepository;
+    private final ConditionsMapper conditionsMapper;
 
     @Override
     public ConditionsDTO createCondition(ConditionsDTO conditionsDTO) {
-        Conditions conditions = ConditionsMapper.toEntity(conditionsDTO);
+        if (conditionsDTO == null) {
+            throw new IllegalArgumentException("conditionsDTO cannot be null");
+        }
+        Conditions conditions = conditionsMapper.toEntity(conditionsDTO);
         Conditions savedConditions = conditionsRepository.save(conditions);
-        return ConditionsMapper.toDTO(savedConditions);
+        return conditionsMapper.toDTO(savedConditions);
     }
 
     @Override
     public List<ConditionsDTO> getAllConditions() {
         List<Conditions> conditions = conditionsRepository.findAll();
-        return conditions.stream()
-                .map(ConditionsMapper::toDTO)
-                .toList();
+        return conditionsMapper.toDtoList(conditions);
     }
 
     @Override
     public Optional<ConditionsDTO> getConditionById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id cannot be null");
+        }
         Conditions conditions = conditionsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Condición con id " + id + " no encontrada"));
-        return Optional.of(ConditionsMapper.toDTO(conditions));
+        return Optional.ofNullable(conditionsMapper.toDTO(conditions));
     }
 
     @Override
     public ConditionsDTO updateCondition(Long id, ConditionsDTO conditionsDTO) {
+        if (id == null) {
+            throw new IllegalArgumentException("id cannot be null");
+        }
+        if (conditionsDTO == null) {
+            throw new IllegalArgumentException("conditionsDTO cannot be null");
+        }
         Conditions conditions = conditionsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Condición con id " + id + " no encontrada"));
-        ConditionsMapper.updateEntity(conditionsDTO, conditions);
+        conditionsMapper.updateEntity(conditionsDTO, conditions);
         Conditions updatedConditions = conditionsRepository.save(conditions);
-        return ConditionsMapper.toDTO(updatedConditions);
+        return conditionsMapper.toDTO(updatedConditions);
     }
 
     @Override
     public void deleteCondition(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id cannot be null");
+        }
+        if (!conditionsRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Condición con id " + id + " no encontrada");
+        }
         conditionsRepository.deleteById(id);
     }
 }

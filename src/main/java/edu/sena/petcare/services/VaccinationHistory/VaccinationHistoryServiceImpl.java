@@ -15,27 +15,41 @@ import java.util.stream.Collectors;
 public class VaccinationHistoryServiceImpl implements VaccinationHistoryService {
 
     private final VaccinationHistoryRepository repository;
+    private final VaccinationHistoryMapper mapper;
 
-    public VaccinationHistoryServiceImpl(VaccinationHistoryRepository repository) {
+    public VaccinationHistoryServiceImpl(VaccinationHistoryRepository repository, VaccinationHistoryMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     @Override
     public VaccinationHistoryReadDTO create(VaccinationHistoryCreateDTO dto) {
-        VaccinationHistory vaccine = VaccinationHistoryMapper.toEntity(dto);
-        return VaccinationHistoryMapper.toReadDTO(repository.save(vaccine));
+        if (dto == null) {
+            throw new IllegalArgumentException("dto cannot be null");
+        }
+        VaccinationHistory vaccine = mapper.toEntity(dto);
+        return mapper.toDto(repository.save(vaccine));
     }
 
     @Override
     public VaccinationHistoryReadDTO update(Long id, VaccinationHistoryUpdateDTO dto) {
+        if (id == null) {
+            throw new IllegalArgumentException("id cannot be null");
+        }
+        if (dto == null) {
+            throw new IllegalArgumentException("dto cannot be null");
+        }
         VaccinationHistory vaccine = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Vacuna no encontrada"));
-        VaccinationHistoryMapper.updateEntity(vaccine, dto);
-        return VaccinationHistoryMapper.toReadDTO(repository.save(vaccine));
+        mapper.updateEntity(dto, vaccine);
+        return mapper.toDto(repository.save(vaccine));
     }
 
     @Override
     public void delete(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id cannot be null");
+        }
         if (!repository.existsById(id)) {
             throw new RuntimeException("Vacuna no encontrada para eliminar");
         }
@@ -44,15 +58,18 @@ public class VaccinationHistoryServiceImpl implements VaccinationHistoryService 
 
     @Override
     public VaccinationHistoryReadDTO getById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id cannot be null");
+        }
         return repository.findById(id)
-                .map(VaccinationHistoryMapper::toReadDTO)
+                .map(mapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Vacuna no encontrada"));
     }
 
     @Override
     public List<VaccinationHistoryReadDTO> getAll() {
         return repository.findAll().stream()
-                .map(VaccinationHistoryMapper::toReadDTO)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 }

@@ -1,32 +1,54 @@
 package edu.sena.petcare.mapper;
 
-import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
-import edu.sena.petcare.dto.schedule.ScheduleReadDTO;
+import org.springframework.stereotype.Component;
 import edu.sena.petcare.dto.schedule.ScheduleNewUpdateDTO;
+import edu.sena.petcare.dto.schedule.ScheduleReadDTO;
 import edu.sena.petcare.models.Schedule;
-import edu.sena.petcare.models.Employee;
+import edu.sena.petcare.utility.ListaMappeo;
+import java.util.List;
 
-@Mapper
-public interface ScheduleMapper {
+@Component
+public class ScheduleMapper {
 
-    ScheduleMapper mapper = Mappers.getMapper(ScheduleMapper.class);
+    public ScheduleReadDTO toDto(Schedule entity) {
+        if (entity == null) {
+            return null;
+        }
+        ScheduleReadDTO dto = new ScheduleReadDTO();
+        dto.setId(entity.getId());
+        dto.setEmployeeId(entity.getEmployee() != null ? entity.getEmployee().getId() : null);
+        dto.setDay(entity.getDay());
+        dto.setStart_time(entity.getStart_time());
+        dto.setEnd_time(entity.getEnd_time());
+        return dto;
+    }
 
-    @Mapping(target = "employeeId", source = "employee.id")
-    ScheduleReadDTO toDto(Schedule entity);
+    public Schedule toEntity(ScheduleNewUpdateDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        Schedule entity = new Schedule();
+        entity.setDay(dto.getDay());
+        entity.setStart_time(dto.getStart_time());
+        entity.setEnd_time(dto.getEnd_time());
+        // Employee relationship handled in Service
+        return entity;
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "employee", expression = "java(toEmployee(dto.getEmployeeId()))")
-    Schedule toEntity(ScheduleNewUpdateDTO dto);
+    public void updateEntity(ScheduleNewUpdateDTO dto, Schedule entity) {
+        if (dto == null || entity == null) {
+            return;
+        }
+        if (dto.getDay() != null)
+            entity.setDay(dto.getDay());
+        if (dto.getStart_time() != null)
+            entity.setStart_time(dto.getStart_time());
+        if (dto.getEnd_time() != null)
+            entity.setEnd_time(dto.getEnd_time());
+        // Employee relationship handled in Service
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "employee", expression = "java(toEmployee(dto.getEmployeeId()))")
-    void updateEntity(ScheduleNewUpdateDTO dto, @MappingTarget Schedule entity);
-
-    default Employee toEmployee(Long employeeId) {
-        if (employeeId == null) return null;
-        Employee e = new Employee();
-        e.setId(employeeId);
-        return e;
+    public List<ScheduleReadDTO> toDtoList(List<Schedule> entities) {
+        return ListaMappeo.toDtoList(entities, this::toDto);
     }
 }

@@ -1,42 +1,74 @@
 package edu.sena.petcare.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
-
+import org.springframework.stereotype.Component;
 import edu.sena.petcare.dto.customer.CustomerNewUpdateDTO;
 import edu.sena.petcare.dto.customer.CustomerReadDTO;
 import edu.sena.petcare.models.Customer;
-
+import edu.sena.petcare.utility.ListaMappeo;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
-public interface CustomerMapper {
+@Component
+public class CustomerMapper {
 
-    @Mappings({
-            @Mapping(source = "documentType.id", target = "documentTypeId"),
-            @Mapping(source = "barrioCliente.id", target = "neighborhoodId")
-    })
-    CustomerReadDTO toDto(Customer entity);
+        public CustomerReadDTO toDto(Customer entity) {
+                if (entity == null) {
+                        return null;
+                }
+                CustomerReadDTO dto = new CustomerReadDTO();
+                dto.setId(entity.getId());
+                dto.setNames(entity.getNames());
+                dto.setLastNames(entity.getLastNames());
+                dto.setDocumentNumber(entity.getDocumentNumber());
+                dto.setEmail(entity.getEmail());
+                dto.setBirthDate(entity.getBirthDate());
+                dto.setAddress(entity.getAddress());
+                dto.setPhone(entity.getPhone());
+                dto.setDocumentTypeId(entity.getDocumentType() != null ? entity.getDocumentType().getId() : null);
+                dto.setNeighborhoodId(entity.getBarrioCliente() != null ? entity.getBarrioCliente().getId() : null);
+                return dto;
+        }
 
-    List<CustomerReadDTO> toDtoList(List<Customer> entities);
+        public Customer toEntity(CustomerNewUpdateDTO dto) {
+                if (dto == null) {
+                        return null;
+                }
+                Customer entity = new Customer();
+                entity.setNames(dto.getNames());
+                entity.setLastNames(dto.getLastNames());
+                entity.setDocumentNumber(dto.getDocumentNumber());
+                entity.setEmail(dto.getEmail());
+                entity.setPassword(dto.getPassword());
+                entity.setBirthDate(dto.getBirthDate());
+                entity.setAddress(dto.getAddress());
+                entity.setPhone(dto.getPhone());
+                // Relationships handled in Service
+                return entity;
+        }
 
-    // Para creación, se administran relaciones en el servicio
-    @Mappings({
-            @Mapping(target = "id", ignore = true),
-            @Mapping(target = "role", ignore = true),
-            @Mapping(target = "createdDate", ignore = true),
-            @Mapping(target = "resetKey", ignore = true),
-            @Mapping(target = "resetDate", ignore = true),
-            @Mapping(target = "tokens", ignore = true),
-            @Mapping(target = "documentType", ignore = true),
-            @Mapping(target = "barrioCliente", ignore = true),
-            @Mapping(target = "pets", ignore = true),
-            @Mapping(target = "wishlists", ignore = true),
-            @Mapping(target = "paymentMethods", ignore = true),
-            @Mapping(target = "deleted", ignore = true)
-    })
-    Customer toEntity(CustomerNewUpdateDTO dto);
+        public void updateEntity(CustomerNewUpdateDTO dto, Customer entity) {
+                if (dto == null || entity == null) {
+                        return;
+                }
+                if (dto.getNames() != null)
+                        entity.setNames(dto.getNames());
+                if (dto.getLastNames() != null)
+                        entity.setLastNames(dto.getLastNames());
+                if (dto.getDocumentNumber() != null)
+                        entity.setDocumentNumber(dto.getDocumentNumber());
+                if (dto.getEmail() != null)
+                        entity.setEmail(dto.getEmail());
+                if (dto.getPassword() != null)
+                        entity.setPassword(dto.getPassword());
+                if (dto.getBirthDate() != null)
+                        entity.setBirthDate(dto.getBirthDate());
+                if (dto.getAddress() != null)
+                        entity.setAddress(dto.getAddress());
+                if (dto.getPhone() != null)
+                        entity.setPhone(dto.getPhone());
+                // Relationships handled in Service
+        }
+
+        public List<CustomerReadDTO> toDtoList(List<Customer> entities) {
+                return ListaMappeo.toDtoList(entities, this::toDto);
+        }
 }
-
-
