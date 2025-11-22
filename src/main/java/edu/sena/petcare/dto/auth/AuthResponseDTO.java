@@ -1,4 +1,4 @@
-package edu.sena.petcare.dtos;
+package edu.sena.petcare.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

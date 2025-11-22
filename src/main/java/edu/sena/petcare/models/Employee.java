@@ -28,7 +28,7 @@ public class Employee extends User {
 
     // relacion con Bill
     @OneToMany(mappedBy = "empleado")
-    private List<Bill> facturas;
+    transient List<Bill> facturas;
 
     @Override
     public java.util.Collection<? extends org.springframework.security.core.GrantedAuthority> getAuthorities() {

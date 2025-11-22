@@ -1,8 +1,8 @@
 package edu.sena.petcare.services;
 
-import edu.sena.petcare.dtos.AuthResponseDTO;
-import edu.sena.petcare.dtos.LoginRequestDTO;
-import edu.sena.petcare.dtos.RegisterRequestDTO;
+import edu.sena.petcare.dto.auth.AuthResponseDTO;
+import edu.sena.petcare.dto.auth.LoginRequestDTO;
+import edu.sena.petcare.dto.auth.RegisterRequestDTO;
 import edu.sena.petcare.exceptions.TokenExpired;
 import edu.sena.petcare.models.Customer;
 import edu.sena.petcare.models.Token;
@@ -95,14 +95,25 @@ public class AuthService {
         tokenRepository.saveAll(validUserTokens);
     }
 
+    private final EmailService emailService;
+
     public String forgotPassword(String email) {
         var user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         String resetToken = java.util.UUID.randomUUID().toString();
         user.setResetKey(resetToken);
-        user.setResetDate(java.time.LocalDateTime.now().plusHours(1)); // 1 hour expiration
+        user.setResetDate(java.time.LocalDateTime.now().plusMinutes(15)); // 15 minutes expiration
         userRepository.save(user);
-        return resetToken; // In a real app, send this via email
+
+        // Send email
+        String resetLink = "http://localhost:3000/reset-password?token=" + resetToken; // Adjust URL to frontend
+        emailService.sendSimpleMessage(
+                user.getEmail(),
+                "Restablecimiento de Contraseña - PetCare",
+                "Para restablecer tu contraseña, usa el siguiente token: " + resetToken + "\n\nO haz clic aquí: "
+                        + resetLink);
+
+        return "Token enviado al correo";
     }
 
     public void resetPassword(String token, String newPassword) {

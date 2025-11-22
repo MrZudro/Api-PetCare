@@ -18,14 +18,14 @@ public class Customer extends User{
 
     //relacion OneToMany con Pet
     @OneToMany(mappedBy = "user")
-    private List<Pet> pets;
+    transient List<Pet> pets;
 
     //relacion OneToMany con Wishlist
     @OneToMany(mappedBy = "user")
-    private List<Wishlist> wishlists;
+    transient List<Wishlist> wishlists;
 
     //relacion OneToMany con MethodPaymentCustomer
     @OneToMany(mappedBy = "user")
-    private List<MethodPaymentCustomer> paymentMethods;
+    transient List<MethodPaymentCustomer> paymentMethods;
 
 }

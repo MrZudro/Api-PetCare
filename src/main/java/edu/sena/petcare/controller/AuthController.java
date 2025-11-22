@@ -1,8 +1,8 @@
-package edu.sena.petcare.controllers;
+package edu.sena.petcare.controller;
 
-import edu.sena.petcare.dtos.AuthResponseDTO;
-import edu.sena.petcare.dtos.LoginRequestDTO;
-import edu.sena.petcare.dtos.RegisterRequestDTO;
+import edu.sena.petcare.dto.auth.AuthResponseDTO;
+import edu.sena.petcare.dto.auth.LoginRequestDTO;
+import edu.sena.petcare.dto.auth.RegisterRequestDTO;
 import edu.sena.petcare.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
