@@ -30,7 +30,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().contains("/auth")) {
+
+        final String servletPath = request.getServletPath();
+
+        // Skip JWT validation for public endpoints
+        if (servletPath.contains("/auth") ||
+                servletPath.contains("/swagger-ui") ||
+                servletPath.contains("/v3/api-docs")) {
             filterChain.doFilter(request, response);
             return;
         }

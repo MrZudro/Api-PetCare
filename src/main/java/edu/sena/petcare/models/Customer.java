@@ -5,27 +5,26 @@ import java.util.List;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"pets", "wishlists", "paymentMethods"})
+@ToString(exclude = { "pets", "wishlists", "paymentMethods" })
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Table(name = "customer")
-public class Customer extends User{
+public class Customer extends User {
 
-    //relacion OneToMany con Pet
+    // relacion OneToMany con Pet
     @OneToMany(mappedBy = "user")
-    transient List<Pet> pets;
+    List<Pet> pets;
 
-    //relacion OneToMany con Wishlist
+    // relacion OneToMany con Wishlist
     @OneToMany(mappedBy = "user")
-    transient List<Wishlist> wishlists;
+    List<Wishlist> wishlists;
 
-    //relacion OneToMany con MethodPaymentCustomer
+    // relacion OneToMany con MethodPaymentCustomer
     @OneToMany(mappedBy = "user")
-    transient List<MethodPaymentCustomer> paymentMethods;
+    List<MethodPaymentCustomer> paymentMethods;
 
 }

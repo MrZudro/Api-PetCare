@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"user", "products"})
+@ToString(exclude = { "user", "products" })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "wishlist")
@@ -23,12 +23,12 @@ public class Wishlist {
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
-    //relacion OneToMany con user
+    // relacion OneToMany con user
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
 
-    //relacion ManyToMany con Product
+    // relacion ManyToMany con Product
     @ManyToMany(mappedBy = "wishlists")
     private List<Product> products;
 }

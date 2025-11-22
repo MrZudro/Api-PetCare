@@ -20,6 +20,16 @@ public class RegisterRequestDTO {
     private LocalDate birthDate;
     private String address;
     private String phone;
+
+    @io.swagger.v3.oas.annotations.media.Schema(example = "1")
     private Long documentTypeId;
+
+    @io.swagger.v3.oas.annotations.media.Schema(example = "1")
     private Long neighborhoodId;
+
+    // New fields for Role and Employee
+    private edu.sena.petcare.models.enums.Rol role;
+    private java.math.BigDecimal salary;
+    private edu.sena.petcare.models.enums.EmployeeCargo cargo;
+    private String employeeCode;
 }

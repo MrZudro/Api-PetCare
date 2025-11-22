@@ -4,14 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import edu.sena.petcare.models.enums.TokenType;
 
-
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(exclude = "user")
 @Getter
-@Setter 
+@Setter
 @Entity(name = "tokens")
 public class Token {
 
@@ -31,7 +30,7 @@ public class Token {
 
     private boolean expired;
 
-    //Muchos a uno con User
+    // Muchos a uno con User
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

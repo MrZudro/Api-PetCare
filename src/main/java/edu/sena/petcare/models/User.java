@@ -76,17 +76,17 @@ public abstract class User implements UserDetails {
 
     // relacion OneToMany con Token
     @OneToMany(mappedBy = "user")
-    transient List<Token> tokens;
+    List<Token> tokens;
 
     // relacion ManyToOne con DocumentType
     @ManyToOne
     @JoinColumn(name = "id_document_type", nullable = false)
-    transient DocumentType documentType;
+    DocumentType documentType;
 
     // relacion ManyToOne con Neighborhood
     @ManyToOne
     @JoinColumn(name = "id_neighborhood")
-    transient Neighborhood barrioCliente;
+    Neighborhood barrioCliente;
 
     @Override
     public java.util.Collection<? extends org.springframework.security.core.GrantedAuthority> getAuthorities() {

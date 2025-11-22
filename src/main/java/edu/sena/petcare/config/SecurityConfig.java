@@ -23,87 +23,105 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+        private final JwtAuthenticationFilter jwtAuthFilter;
+        private final AuthenticationProvider authenticationProvider;
 
-    //Constantes
-    private static final String URL_APPOINTMENT ="/Appointment/**";
-    private static final String URL_CUSTOMER ="/Customer/**";
-    private static final String URL_PET ="/Pet/**";
-    private static final String AUTHORITY_CASHIER ="CARGO_CASHIER";
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(auth -> auth
-                        // Public Endpoints (GET)
-                        .requestMatchers(HttpMethod.GET, "/products/**", "/services/**", "/veterinaryClinic/**",
-                                "/subCategory/**", "/Category/**", "/specie/**", "/race/**", "/neighborhood/**",
-                                "/locality/**", "/documentType/**")
-                        .permitAll()
+        // Constantes
+        private static final String URL_APPOINTMENT = "/Appointment/**";
+        private static final String URL_CUSTOMER = "/Customer/**";
+        private static final String URL_PET = "/Pet/**";
+        private static final String AUTHORITY_CASHIER = "CARGO_CASHIER";
 
-                        // Public Auth Endpoints
-                        .requestMatchers("/auth/**").permitAll()
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .authorizeHttpRequests(auth -> auth
+                                                // Swagger UI - MUST BE FIRST
+                                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**",
+                                                                "/swagger-ui.html")
+                                                .permitAll()
 
-                        // Swagger UI
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                                                // Public Auth Endpoints - MUST BE BEFORE OTHER RULES
+                                                .requestMatchers("/auth/**").permitAll()
 
-                        // Customer Role
-                        .requestMatchers("/Consultation/**", "/petConditions/**", "/schedule/**",
-                                "/vaccinationHistory/**", "/wishlist/**")
-                        .hasAuthority("CUSTOMER")
-                        .requestMatchers(URL_APPOINTMENT, URL_CUSTOMER, "/MethodPaymentCustomer/**", URL_PET,
-                                "/User/**", "/Wishlist/**")
-                        .hasAuthority("CUSTOMER")
+                                                // Public Endpoints (GET)
+                                                .requestMatchers(HttpMethod.GET, "/products/**", "/services/**",
+                                                                "/veterinaryClinic/**",
+                                                                "/subCategory/**", "/Category/**", "/specie/**",
+                                                                "/race/**", "/neighborhood/**",
+                                                                "/locality/**", "/documentType/**")
+                                                .permitAll()
 
-                        // Admin Role
-                        // GET only
-                        .requestMatchers(HttpMethod.GET, "/Bill/**", URL_CUSTOMER, URL_PET, "/Transactions/**",
-                                "/User/**")
-                        .hasAuthority("ADMIN")
-                        // Full Access
-                        .requestMatchers(URL_APPOINTMENT, "/Category/**", "/Conditions/**", "/Employee/**",
-                                "/VeterinaryClinic/**", "/Product/**", "/Schedule/**", "/Subcategory/**",
-                                "/Services/**")
-                        .hasAuthority("ADMIN")
+                                                // Customer Role
+                                                .requestMatchers("/Consultation/**", "/petConditions/**",
+                                                                "/schedule/**",
+                                                                "/vaccinationHistory/**", "/wishlist/**")
+                                                .hasAuthority("CUSTOMER")
+                                                .requestMatchers(URL_APPOINTMENT, URL_CUSTOMER,
+                                                                "/MethodPaymentCustomer/**", URL_PET,
+                                                                "/User/**", "/Wishlist/**")
+                                                .hasAuthority("CUSTOMER")
 
-                        // Employee (VETERINARIAN)
-                        // GET only
-                        .requestMatchers(HttpMethod.GET, URL_APPOINTMENT, "/Consultation/**", URL_CUSTOMER,
-                                URL_PET, "/PetConditions/**", "/Schedule/**")
-                        .hasAuthority("CARGO_VETERINARIAN")
-                        // Full Access
-                        .requestMatchers("/VaccinationHistory/**").hasAuthority("CARGO_VETERINARIAN")
+                                                // Admin Role
+                                                // GET only
+                                                .requestMatchers(HttpMethod.GET, "/Bill/**", URL_CUSTOMER, URL_PET,
+                                                                "/Transactions/**",
+                                                                "/User/**")
+                                                .hasAuthority("ADMIN")
+                                                // Full Access
+                                                .requestMatchers(URL_APPOINTMENT, "/Category/**", "/Conditions/**",
+                                                                "/Employee/**",
+                                                                "/VeterinaryClinic/**", "/Product/**", "/Schedule/**",
+                                                                "/Subcategory/**",
+                                                                "/Services/**")
+                                                .hasAuthority("ADMIN")
 
-                        // Employee (CASHIER)
-                        // GET only
-                        .requestMatchers(HttpMethod.GET, URL_APPOINTMENT, "/transactions/**", "/bill/**")
-                        .hasAuthority(AUTHORITY_CASHIER)
-                        // POST and GET
-                        .requestMatchers(HttpMethod.GET, URL_PET, URL_CUSTOMER).hasAuthority(AUTHORITY_CASHIER)
-                        .requestMatchers(HttpMethod.POST, URL_PET, URL_CUSTOMER).hasAuthority(AUTHORITY_CASHIER)
+                                                // Employee (VETERINARIAN)
+                                                // GET only
+                                                .requestMatchers(HttpMethod.GET, URL_APPOINTMENT, "/Consultation/**",
+                                                                URL_CUSTOMER,
+                                                                URL_PET, "/PetConditions/**", "/Schedule/**")
+                                                .hasAuthority("CARGO_VETERINARIAN")
+                                                // Full Access
+                                                .requestMatchers("/VaccinationHistory/**")
+                                                .hasAuthority("CARGO_VETERINARIAN")
 
-                        .anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                                                // Employee (CASHIER)
+                                                // GET only
+                                                .requestMatchers(HttpMethod.GET, URL_APPOINTMENT, "/transactions/**",
+                                                                "/bill/**")
+                                                .hasAuthority(AUTHORITY_CASHIER)
+                                                // POST and GET
+                                                .requestMatchers(HttpMethod.GET, URL_PET, URL_CUSTOMER)
+                                                .hasAuthority(AUTHORITY_CASHIER)
+                                                .requestMatchers(HttpMethod.POST, URL_PET, URL_CUSTOMER)
+                                                .hasAuthority(AUTHORITY_CASHIER)
 
-        return http.build();
-    }
+                                                .anyRequest().authenticated())
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authenticationProvider(authenticationProvider)
+                                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("*")); // Allow all origins for dev
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept",
-                "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
-        configuration
-                .setExposedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+                return http.build();
+        }
+
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration configuration = new CorsConfiguration();
+                configuration.setAllowedOriginPatterns(List.of("*")); // Allow all origins for dev
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+                configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With",
+                                "Accept",
+                                "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+                configuration
+                                .setExposedHeaders(Arrays.asList("Access-Control-Allow-Origin",
+                                                "Access-Control-Allow-Credentials"));
+                configuration.setAllowCredentials(true);
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", configuration);
+                return source;
+        }
 }

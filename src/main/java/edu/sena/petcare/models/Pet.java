@@ -1,4 +1,5 @@
 package edu.sena.petcare.models;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"user", "raza"})
+@ToString(exclude = { "user", "raza" })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "pet")
@@ -42,17 +43,17 @@ public class Pet {
     @Column(nullable = false, length = 10)
     private String gender;
 
-    //relacion OneToMany con Race
+    // relacion OneToMany con Race
     @ManyToOne
     @JoinColumn(name = "id_race")
     private Race raza;
 
-    //relacion OneToMany con User
+    // relacion OneToMany con User
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
 
-    //relacion OneToMany con PetConditions
+    // relacion OneToMany con PetConditions
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PetConditions> petConditions;
 }

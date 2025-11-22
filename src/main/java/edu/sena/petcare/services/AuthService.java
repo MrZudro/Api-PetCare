@@ -25,30 +25,66 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
+    private final edu.sena.petcare.repositories.EmployeeRepository employeeRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
+    private final edu.sena.petcare.repositories.DocumentTypeRepository documentTypeRepository;
+    private final edu.sena.petcare.repositories.NeighborhoodRepository neighborhoodRepository;
 
     public AuthResponseDTO register(RegisterRequestDTO request) {
-        var user = new Customer();
+        User user;
+        if (request.getRole() == Rol.EMPLOYEE) {
+            var employee = new edu.sena.petcare.models.Employee();
+            employee.setSalary(request.getSalary());
+            employee.setCargo(request.getCargo());
+            employee.setEmployeeCode(request.getEmployeeCode());
+            user = employee;
+        } else {
+            user = new Customer();
+        }
+
         user.setNames(request.getNames());
         user.setLastNames(request.getLastNames());
         user.setDocumentNumber(request.getDocumentNumber());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Rol.CUSTOMER);
+        user.setRole(request.getRole() != null ? request.getRole() : Rol.CUSTOMER);
         user.setBirthDate(request.getBirthDate());
         user.setAddress(request.getAddress());
         user.setPhone(request.getPhone());
-        // Set other fields like documentType and neighborhood if needed, assuming they
-        // are fetched or set elsewhere
-        // For simplicity, we are skipping relation setting here, but in real app we
-        // should fetch them.
 
-        var savedUser = customerRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+        // Set documentType (required)
+        if (request.getDocumentTypeId() != null) {
+            var documentType = documentTypeRepository.findById(request.getDocumentTypeId())
+                    .orElseThrow(() -> new RuntimeException(
+                            "DocumentType not found with id: " + request.getDocumentTypeId()));
+            user.setDocumentType(documentType);
+        } else {
+            throw new RuntimeException("DocumentType is required");
+        }
+
+        // Set neighborhood (optional)
+        if (request.getNeighborhoodId() != null) {
+            var neighborhood = neighborhoodRepository.findById(request.getNeighborhoodId())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Neighborhood not found with id: " + request.getNeighborhoodId()));
+            user.setBarrioCliente(neighborhood);
+        }
+
+        User savedUser;
+        if (user instanceof edu.sena.petcare.models.Employee employee) {
+            savedUser = employeeRepository.save(employee);
+        } else if (user instanceof Customer customer) {
+            savedUser = customerRepository.save(customer);
+        } else {
+            throw new IllegalStateException("Unknown user type");
+        }
+
+        var jwtToken = jwtService.generateToken(savedUser);
+        var refreshToken = jwtService.generateRefreshToken(savedUser);
         saveUserToken(savedUser, jwtToken);
         return AuthResponseDTO.builder()
                 .token(jwtToken)
@@ -94,8 +130,6 @@ public class AuthService {
         });
         tokenRepository.saveAll(validUserTokens);
     }
-
-    private final EmailService emailService;
 
     public String forgotPassword(String email) {
         var user = userRepository.findByEmail(email)

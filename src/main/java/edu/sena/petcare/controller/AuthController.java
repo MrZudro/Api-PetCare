@@ -4,6 +4,7 @@ import edu.sena.petcare.dto.auth.AuthResponseDTO;
 import edu.sena.petcare.dto.auth.LoginRequestDTO;
 import edu.sena.petcare.dto.auth.RegisterRequestDTO;
 import edu.sena.petcare.services.AuthService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "") // Override global security requirement for public auth endpoints
 public class AuthController {
 
     private final AuthService authService;
