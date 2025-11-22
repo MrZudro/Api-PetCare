@@ -3,6 +3,7 @@ package edu.sena.petcare.services;
 import edu.sena.petcare.dtos.AuthResponseDTO;
 import edu.sena.petcare.dtos.LoginRequestDTO;
 import edu.sena.petcare.dtos.RegisterRequestDTO;
+import edu.sena.petcare.exceptions.TokenExpired;
 import edu.sena.petcare.models.Customer;
 import edu.sena.petcare.models.Token;
 import edu.sena.petcare.models.User;
@@ -109,7 +110,7 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("Invalid token"));
 
         if (user.getResetDate().isBefore(java.time.LocalDateTime.now())) {
-            throw new RuntimeException("Token expired");
+            throw new TokenExpired("Token expired");
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));

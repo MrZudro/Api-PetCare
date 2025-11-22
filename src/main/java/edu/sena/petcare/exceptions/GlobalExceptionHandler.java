@@ -25,6 +25,24 @@ public class GlobalExceptionHandler {
             "SOLICITUD ERRONEA");
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_ACCEPTABLE);
     }
+
+    @ExceptionHandler(TokenExpired.class)
+    public ResponseEntity<ErrorResponse> handleTokenExpiredException(TokenExpired exception) {
+        ErrorResponse errorResponse = new ErrorResponse(
+            exception.getMessage(),
+            HttpStatus.NOT_ACCEPTABLE.value(), 
+            "TOKEN EXPIRADO");
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(
+            exception.getMessage(),
+            HttpStatus.NOT_ACCEPTABLE.value(), 
+            "RECURSO NO ENCONTRADO");
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_ACCEPTABLE);
+    }
     
     
 }
