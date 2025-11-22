@@ -7,8 +7,7 @@ import edu.sena.petcare.mapper.ServiceMapper;
 import edu.sena.petcare.models.Services;
 import edu.sena.petcare.repositories.ServicesRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.util.Assert;
-import java.util.Objects;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +25,7 @@ public class ServicesServiceImpl implements ServicesService {
             throw new IllegalArgumentException("serviceNewUpdateDTO es obligatorio");
         }
         Services service = serviceMapper.toEntity(serviceNewUpdateDTO);
+        @SuppressWarnings("null")
         Services savedService = servicesRepository.save(service);
         return serviceMapper.toDto(savedService);
     }
@@ -58,6 +58,7 @@ public class ServicesServiceImpl implements ServicesService {
                 .orElseThrow(() -> new ResourceNotFoundException("Servicio con id " + id + " no encontrado"));
 
         serviceMapper.updateEntity(serviceNewUpdateDTO, serviceToUpdate);
+        @SuppressWarnings("null")
         Services updatedService = servicesRepository.save(serviceToUpdate);
         return serviceMapper.toDto(updatedService);
     }

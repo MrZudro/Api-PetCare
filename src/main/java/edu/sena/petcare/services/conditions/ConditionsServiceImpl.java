@@ -25,6 +25,7 @@ public class ConditionsServiceImpl implements ConditionsService {
             throw new IllegalArgumentException("conditionsDTO cannot be null");
         }
         Conditions conditions = conditionsMapper.toEntity(conditionsDTO);
+        @SuppressWarnings("null")
         Conditions savedConditions = conditionsRepository.save(conditions);
         return conditionsMapper.toDTO(savedConditions);
     }
@@ -56,6 +57,7 @@ public class ConditionsServiceImpl implements ConditionsService {
         Conditions conditions = conditionsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Condición con id " + id + " no encontrada"));
         conditionsMapper.updateEntity(conditionsDTO, conditions);
+        @SuppressWarnings("null")
         Conditions updatedConditions = conditionsRepository.save(conditions);
         return conditionsMapper.toDTO(updatedConditions);
     }

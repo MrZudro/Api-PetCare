@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Collections;
 import java.util.stream.Collectors;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -77,7 +76,7 @@ public class WishlistServiceImpl implements WishlistService {
         User user = wishlist.getUser();
 
         // 3. Validar Productos nuevos
-        List<Long> productIds = wishlistDTO.getProductIds() == null ? Collections.emptyList()
+        List<Long> productIds = wishlistDTO.getProductIds() == null ? Collections.<Long>emptyList()
                 : wishlistDTO.getProductIds();
         List<Product> newProducts = productRepository.findAllById(productIds);
         if (newProducts.size() != productIds.size()) {
@@ -122,6 +121,3 @@ public class WishlistServiceImpl implements WishlistService {
                 .collect(Collectors.toList());
     }
 }
-
-// ya se que no existe un CRUD de user pero es por ahora como para simular
-// cuando este implementado

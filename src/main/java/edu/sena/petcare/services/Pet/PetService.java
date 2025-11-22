@@ -1,4 +1,4 @@
-package edu.sena.petcare.services.Pet;
+package edu.sena.petcare.services.pet;
 
 import edu.sena.petcare.dto.Pet.PetCreateDTO;
 import edu.sena.petcare.dto.Pet.PetReadDTO;
@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface PetService {
     PetReadDTO create(PetCreateDTO dto);
+
     PetReadDTO update(Long id, PetUpdateDTO dto);
+
     void deactivate(Long id);
+
     PetReadDTO getById(Long id);
+
     List<PetReadDTO> getAllByUser(Long userId);
 }

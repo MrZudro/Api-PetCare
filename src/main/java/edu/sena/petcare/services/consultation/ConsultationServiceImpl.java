@@ -11,6 +11,7 @@ import edu.sena.petcare.repositories.ConsultationRepository;
 import edu.sena.petcare.repositories.EmployeeRepository;
 import edu.sena.petcare.repositories.VeterinaryClinicRepository;
 import edu.sena.petcare.repositories.PetRepository;
+import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,15 +48,17 @@ public class ConsultationServiceImpl implements ConsultationService {
         Consultation consultation = consultationMapper.toEntity(dto);
 
         // 2. Asignar Entidades relacionadas (Validación de existencia)
-        consultation.setEmployee(employeeRepository.findById(dto.getEmployeeId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Empleado/Veterinario con ID " + dto.getEmployeeId() + " no encontrado")));
+        consultation.setEmployee(
+                employeeRepository.findById(Objects.requireNonNull(dto.getEmployeeId(), "Employee ID cannot be null"))
+                        .orElseThrow(() -> new ResourceNotFoundException(
+                                "Empleado/Veterinario con ID " + dto.getEmployeeId() + " no encontrado")));
 
-        consultation.setVeterinaryClinic(veterinaryClinicRepository.findById(dto.getVeterinaryClinicId())
+        consultation.setVeterinaryClinic(veterinaryClinicRepository
+                .findById(Objects.requireNonNull(dto.getVeterinaryClinicId(), "Veterinary Clinic ID cannot be null"))
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Clínica con ID " + dto.getVeterinaryClinicId() + " no encontrada")));
 
-        consultation.setPet(petRepository.findById(dto.getPetId())
+        consultation.setPet(petRepository.findById(Objects.requireNonNull(dto.getPetId(), "Pet ID cannot be null"))
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Mascota con ID " + dto.getPetId() + " no encontrada")));
 
@@ -79,7 +82,7 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Override
     @Transactional(readOnly = true)
     public ConsultationReadDTO getConsultationById(Long id) {
-        Consultation consultation = consultationRepository.findById(id)
+        Consultation consultation = consultationRepository.findById(Objects.requireNonNull(id, "ID cannot be null"))
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(NOT_FOUND_MSG, id)));
         return consultationMapper.toDto(consultation);
     }

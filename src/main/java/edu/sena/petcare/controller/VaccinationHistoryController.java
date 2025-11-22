@@ -3,7 +3,7 @@ package edu.sena.petcare.controller;
 import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryCreateDTO;
 import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryReadDTO;
 import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryUpdateDTO;
-import edu.sena.petcare.services.VaccinationHistory.VaccinationHistoryService;
+import edu.sena.petcare.services.vaccinationhistory.VaccinationHistoryService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,8 @@ public class VaccinationHistoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VaccinationHistoryReadDTO> update(@PathVariable Long id, @RequestBody VaccinationHistoryUpdateDTO dto) {
+    public ResponseEntity<VaccinationHistoryReadDTO> update(@PathVariable Long id,
+            @RequestBody VaccinationHistoryUpdateDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 

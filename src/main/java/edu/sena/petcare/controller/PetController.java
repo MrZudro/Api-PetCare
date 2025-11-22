@@ -1,7 +1,7 @@
 package edu.sena.petcare.controller;
 
 import edu.sena.petcare.dto.Pet.*;
-import edu.sena.petcare.services.Pet.PetService;
+import edu.sena.petcare.services.pet.PetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -16,18 +16,15 @@ public class PetController {
         this.service = service;
     }
 
-
     @PostMapping
     public ResponseEntity<PetReadDTO> create(@RequestBody PetCreateDTO dto) {
         return ResponseEntity.ok(service.create(dto));
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<PetReadDTO> update(@PathVariable Long id, @RequestBody PetUpdateDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
-
 
     @PatchMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivate(@PathVariable Long id) {
@@ -35,12 +32,10 @@ public class PetController {
         return ResponseEntity.noContent().build();
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<PetReadDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
     }
-
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<PetReadDTO>> getAllByUser(@PathVariable Long userId) {

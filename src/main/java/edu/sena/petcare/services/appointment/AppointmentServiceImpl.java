@@ -10,6 +10,7 @@ import edu.sena.petcare.repositories.AppointmentRepository;
 import edu.sena.petcare.repositories.CustomerRepository;
 import edu.sena.petcare.repositories.VeterinaryClinicRepository;
 import edu.sena.petcare.repositories.EmployeeRepository;
+import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -108,41 +109,9 @@ public class AppointmentServiceImpl implements AppointmentService {
                                 .orElseThrow(() -> new ResourceNotFoundException(String.format(NOT_FOUND_MSG, id)));
 
                 // 2. Actualizar las relaciones ManyToOne si cambiaron los IDs
-
-                // Cliente
-                if (dto.getCustomerId() != null && (existingAppointment.getCustomer() == null
-                                || !existingAppointment.getCustomer().getId().equals(dto.getCustomerId()))) {
-                        existingAppointment.setCustomer(customerRepository.findById(dto.getCustomerId())
-                                        .orElseThrow(() -> new ResourceNotFoundException(
-                                                        "Cliente con ID " + dto.getCustomerId() + NOT_FOUND_MESSAGE)));
-                }
-
-                // Clínica
-                if (dto.getVeterinaryClinicId() != null && (existingAppointment.getVeterinaryClinic() == null
-                                || !existingAppointment.getVeterinaryClinic().getId()
-                                                .equals(dto.getVeterinaryClinicId()))) {
-                        existingAppointment.setVeterinaryClinic(clinicRepository.findById(dto.getVeterinaryClinicId())
-                                        .orElseThrow(() -> new ResourceNotFoundException(
-                                                        "Clínica con ID " + dto.getVeterinaryClinicId()
-                                                                        + " no encontrada")));
-                }
-
-                // Empleado
-                Long currentEmployeeId = existingAppointment.getEmployee() != null
-                                ? existingAppointment.getEmployee().getId()
-                                : null;
-                if ((currentEmployeeId == null && dto.getEmployeeId() != null) ||
-                                (currentEmployeeId != null && !currentEmployeeId.equals(dto.getEmployeeId()))) {
-
-                        if (dto.getEmployeeId() != null) {
-                                existingAppointment.setEmployee(employeeRepository.findById(dto.getEmployeeId())
-                                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                                "Empleado con ID " + dto.getEmployeeId()
-                                                                                + NOT_FOUND_MESSAGE)));
-                        } else {
-                                existingAppointment.setEmployee(null);
-                        }
-                }
+                updateCustomer(dto, existingAppointment);
+                updateClinic(dto, existingAppointment);
+                updateEmployee(dto, existingAppointment);
 
                 // 3. Mapear los campos simples (fecha, razón, estado) del DTO a la entidad
                 // existente
@@ -151,6 +120,50 @@ public class AppointmentServiceImpl implements AppointmentService {
                 // 4. Guardar y Mapear a DTO de Lectura
                 Appointment updatedAppointment = appointmentRepository.save(existingAppointment);
                 return appointmentMapper.toDto(updatedAppointment);
+        }
+
+        private void updateCustomer(AppointmentNewUpdateDTO dto, Appointment existingAppointment) {
+                if (dto.getCustomerId() != null && (existingAppointment.getCustomer() == null
+                                || !existingAppointment.getCustomer().getId().equals(dto.getCustomerId()))) {
+                        existingAppointment.setCustomer(customerRepository
+                                        .findById(Objects.requireNonNull(dto.getCustomerId(),
+                                                        "Customer ID cannot be null"))
+                                        .orElseThrow(() -> new ResourceNotFoundException(
+                                                        "Cliente con ID " + dto.getCustomerId() + NOT_FOUND_MESSAGE)));
+                }
+        }
+
+        private void updateClinic(AppointmentNewUpdateDTO dto, Appointment existingAppointment) {
+                if (dto.getVeterinaryClinicId() != null && (existingAppointment.getVeterinaryClinic() == null
+                                || !existingAppointment.getVeterinaryClinic().getId()
+                                                .equals(dto.getVeterinaryClinicId()))) {
+                        existingAppointment.setVeterinaryClinic(clinicRepository
+                                        .findById(Objects.requireNonNull(dto.getVeterinaryClinicId(),
+                                                        "Clinic ID cannot be null"))
+                                        .orElseThrow(() -> new ResourceNotFoundException(
+                                                        "Clínica con ID " + dto.getVeterinaryClinicId()
+                                                                        + " no encontrada")));
+                }
+        }
+
+        private void updateEmployee(AppointmentNewUpdateDTO dto, Appointment existingAppointment) {
+                Long currentEmployeeId = existingAppointment.getEmployee() != null
+                                ? existingAppointment.getEmployee().getId()
+                                : null;
+                if ((currentEmployeeId == null && dto.getEmployeeId() != null) ||
+                                (currentEmployeeId != null && !currentEmployeeId.equals(dto.getEmployeeId()))) {
+
+                        if (dto.getEmployeeId() != null) {
+                                existingAppointment.setEmployee(employeeRepository
+                                                .findById(Objects.requireNonNull(dto.getEmployeeId(),
+                                                                "Employee ID cannot be null"))
+                                                .orElseThrow(() -> new ResourceNotFoundException(
+                                                                "Empleado con ID " + dto.getEmployeeId()
+                                                                                + NOT_FOUND_MESSAGE)));
+                        } else {
+                                existingAppointment.setEmployee(null);
+                        }
+                }
         }
 
         @Override
