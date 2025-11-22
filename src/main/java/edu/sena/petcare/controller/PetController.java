@@ -1,7 +1,8 @@
 package edu.sena.petcare.controller;
 
 import edu.sena.petcare.dto.Pet.*;
-import edu.sena.petcare.services.pet.PetService;
+import edu.sena.petcare.services.pet_temp.PetService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;

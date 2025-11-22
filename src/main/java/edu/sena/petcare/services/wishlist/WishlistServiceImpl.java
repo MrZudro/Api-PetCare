@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class WishlistServiceImpl implements WishlistService {
         return wishlistRepository.findAll()
                 .stream()
                 .map(wishlistMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -78,6 +77,7 @@ public class WishlistServiceImpl implements WishlistService {
         // 3. Validar Productos nuevos
         List<Long> productIds = wishlistDTO.getProductIds() == null ? Collections.<Long>emptyList()
                 : wishlistDTO.getProductIds();
+        @SuppressWarnings("null")
         List<Product> newProducts = productRepository.findAllById(productIds);
         if (newProducts.size() != productIds.size()) {
             throw new ResourceNotFoundException("Uno o más productos no fueron encontrados.");
@@ -118,6 +118,6 @@ public class WishlistServiceImpl implements WishlistService {
         return wishlistRepository.findByCreateDateBetween(startDate, endDate)
                 .stream()
                 .map(wishlistMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

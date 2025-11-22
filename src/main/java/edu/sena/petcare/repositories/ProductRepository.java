@@ -12,12 +12,12 @@ import edu.sena.petcare.models.Product;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // Consulta los productos que tienen al menos una subcategoría con el ID dado.
-    List<Product> findBySubcategorias_Id(Long subcategoriaId);
+    List<Product> findByProductSubcategories_Subcategory_Id(Long subcategoriaId);
 
-    //Consulta cruzada para buscar producto por categoria
-    @Query("SELECT p FROM Producto p JOIN p.subcategorias s WHERE s.categoria.id = :categoriaId")
+    // Consulta cruzada para buscar producto por categoria
+    @Query("SELECT DISTINCT p FROM Product p JOIN p.productSubcategories ps JOIN ps.subcategory s WHERE s.categoria.id = :categoriaId")
     List<Product> findByCategoriaId(@Param("categoriaId") Long categoriaId);
 
-    //Consulta el producto por SKU para evitar que hayan dos productos iguales
+    // Consulta el producto por SKU para evitar que hayan dos productos iguales
     Optional<Product> findBySkuIgnoreCase(String sku);
 }

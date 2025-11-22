@@ -2,7 +2,6 @@ package edu.sena.petcare.services.customer;
 
 import java.time.LocalDateTime;
 import java.util.List;
- 
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -35,19 +34,26 @@ public class CustomerServiceImpl implements CustomerService {
     private final WishlistRepository wishlistRepository;
     private final CustomerMapper customerMapper;
 
+    private static final String ID_REQUIRED_MSG = "id es obligatorio";
+    private static final String CUSTOMER_NOT_FOUND_MSG = "Cliente no encontrado con id: ";
+
     @Override
     @Transactional
     public CustomerReadDTO create(CustomerNewUpdateDTO dto) {
         Assert.notNull(dto, "dto es obligatorio");
         Customer entity = customerMapper.toEntity(dto);
 
-        DocumentType docType = documentTypeRepository.findById(java.util.Objects.requireNonNull(dto.getDocumentTypeId(), "documentTypeId es obligatorio"))
-                .orElseThrow(() -> new ResourceNotFoundException("Tipo de documento no encontrado con id: " + dto.getDocumentTypeId()));
+        DocumentType docType = documentTypeRepository
+                .findById(java.util.Objects.requireNonNull(dto.getDocumentTypeId(), "documentTypeId es obligatorio"))
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Tipo de documento no encontrado con id: " + dto.getDocumentTypeId()));
         entity.setDocumentType(docType);
 
         if (dto.getNeighborhoodId() != null) {
-            Neighborhood barrio = neighborhoodRepository.findById(java.util.Objects.requireNonNull(dto.getNeighborhoodId()))
-                    .orElseThrow(() -> new ResourceNotFoundException("Barrio no encontrado con id: " + dto.getNeighborhoodId()));
+            Neighborhood barrio = neighborhoodRepository
+                    .findById(java.util.Objects.requireNonNull(dto.getNeighborhoodId()))
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Barrio no encontrado con id: " + dto.getNeighborhoodId()));
             entity.setBarrioCliente(barrio);
         }
 
@@ -75,8 +81,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional(readOnly = true)
     @SuppressWarnings("null")
     public CustomerReadDTO findById(Long id) {
-        Customer customer = customerRepository.findById(Objects.requireNonNull(id, "id es obligatorio"))
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con id: " + id));
+        Customer customer = customerRepository.findById(Objects.requireNonNull(id, ID_REQUIRED_MSG))
+                .orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND_MSG + id));
         return customerMapper.toDto(customer);
     }
 
@@ -84,10 +90,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     @SuppressWarnings("null")
     public CustomerReadDTO update(Long id, CustomerNewUpdateDTO dto) {
-        Objects.requireNonNull(id, "id es obligatorio");
+        Objects.requireNonNull(id, ID_REQUIRED_MSG);
         Objects.requireNonNull(dto, "dto es obligatorio");
         Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND_MSG + id));
 
         // Actualizamos campos simples
         customer.setNames(dto.getNames());
@@ -99,13 +105,17 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setAddress(dto.getAddress());
         customer.setPhone(dto.getPhone());
 
-        DocumentType docType = documentTypeRepository.findById(java.util.Objects.requireNonNull(dto.getDocumentTypeId(), "documentTypeId es obligatorio"))
-                .orElseThrow(() -> new ResourceNotFoundException("Tipo de documento no encontrado con id: " + dto.getDocumentTypeId()));
+        DocumentType docType = documentTypeRepository
+                .findById(java.util.Objects.requireNonNull(dto.getDocumentTypeId(), "documentTypeId es obligatorio"))
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Tipo de documento no encontrado con id: " + dto.getDocumentTypeId()));
         customer.setDocumentType(docType);
 
         if (dto.getNeighborhoodId() != null) {
-            Neighborhood barrio = neighborhoodRepository.findById(java.util.Objects.requireNonNull(dto.getNeighborhoodId()))
-                    .orElseThrow(() -> new ResourceNotFoundException("Barrio no encontrado con id: " + dto.getNeighborhoodId()));
+            Neighborhood barrio = neighborhoodRepository
+                    .findById(java.util.Objects.requireNonNull(dto.getNeighborhoodId()))
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Barrio no encontrado con id: " + dto.getNeighborhoodId()));
             customer.setBarrioCliente(barrio);
         } else {
             customer.setBarrioCliente(null);
@@ -119,12 +129,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     @SuppressWarnings("null")
     public void delete(Long id) {
-        Customer customer = customerRepository.findById(Objects.requireNonNull(id, "id es obligatorio"))
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con id: " + id));
+        Customer customer = customerRepository.findById(Objects.requireNonNull(id, ID_REQUIRED_MSG))
+                .orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND_MSG + id));
         // Soft delete: marcar isDeleted en User (no borrar tablas hijas)
         customer.setDeleted(true);
         customerRepository.save(customer);
     }
 }
-
-

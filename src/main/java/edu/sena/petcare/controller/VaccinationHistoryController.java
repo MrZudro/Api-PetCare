@@ -3,7 +3,7 @@ package edu.sena.petcare.controller;
 import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryCreateDTO;
 import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryReadDTO;
 import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryUpdateDTO;
-import edu.sena.petcare.services.vaccinationhistory.VaccinationHistoryService;
+import edu.sena.petcare.services.vaccinationhistory_temp.VaccinationHistoryService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
