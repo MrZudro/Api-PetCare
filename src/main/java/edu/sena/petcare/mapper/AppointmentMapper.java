@@ -1,55 +1,86 @@
 package edu.sena.petcare.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
-
 import edu.sena.petcare.dto.appointment.AppointmentNewUpdateDTO;
 import edu.sena.petcare.dto.appointment.AppointmentReadDTO;
 import edu.sena.petcare.models.Appointment;
 import edu.sena.petcare.models.enums.AppointmentStatus;
 
-import java.util.List;
+public class AppointmentMapper {
 
-@Mapper(componentModel = "spring") // Usamos "spring" para inyección automática
-public interface AppointmentMapper {
+    //-- Constructor privado para evitar instancias --
+    private AppointmentMapper(){
+        throw new IllegalStateException("Imposible instanciar");
+    }
+    //1. Entidad a DTO de lectura
+    public static AppointmentReadDTO toReadDto(Appointment entity) {
+        //Si el objeto entity que es una entidad de Appointment es nulo, retronamos un null por defecto
+        if(entity == null){
+            return null;
+        }
+        //Voy a crear un nuevo objeto del DTO de AppointmentReadDTO
+        AppointmentReadDTO dto = new AppointmentReadDTO();
+        dto.setId(entity.getId());
+        dto.setAppointmentDateTime(entity.getAppointmentDateTime());
+        dto.setStatus(entity.getStatus());
+        dto.setReason(entity.getReason());
 
-    // 0. Obtención del mapper (para uso manual si es necesario)
-    AppointmentMapper mapper = Mappers.getMapper(AppointmentMapper.class);
+        //Voy a mapear id y nombres desde una entidad diferente, lo hago a traves de una sentencia condicional para 
+        if(entity.getCustomer() != null){
+            dto.setCustomerId(entity.getCustomer().getId());
+            dto.setCustomerName(entity.getCustomer().getNames());
+        }
 
-    // 1. Mapeo de Entidad a DTO de Lectura
-    /**
-     * @Documented Convierte la Entidad Appointment a DTO de Lectura.
-     * Mapea los nombres de las entidades relacionadas para la vista del usuario.
-     */
-    @Mapping(target = "customerName", source = "customer.name")
-    @Mapping(target = "veterinaryClinicName", source = "veterinaryClinic.name")
-    @Mapping(target = "employeeName", source = "employee.name")
-    AppointmentReadDTO toReadDto(Appointment entity);
-    List<AppointmentReadDTO> toReadDtoList(List<Appointment> entities);
+        //Mapeo de la veterinaria
+        if(entity.getVeterinaryClinic() != null){
+            dto.setVeterinaryClinicName(entity.getVeterinaryClinic().getName());
+        }
 
-    // 2. Mapeo de DTO de Solicitud a Entidad (para CREAR)
-    /**
-     * @Documented Convierte DTO de Creación a Entidad.
-     * Ignora el ID y las entidades relacionadas, se asignarán en el Servicio.
-     * Fija el estado inicial como PENDING.
-     */
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "customer", ignore = true)
-    @Mapping(target = "veterinaryClinic", ignore = true)
-    @Mapping(target = "employee", ignore = true)
-    @Mapping(target = "status", constant = "PENDING") 
-    Appointment toEntity(AppointmentNewUpdateDTO dto);
-    
-    // 3. Método para actualizar una Entidad existente
-    /**
-     * @Documented Actualiza la Entidad existente con los datos del DTO.
-     * Ignora el ID y las entidades relacionadas para evitar sobrescribir las referencias.
-     */
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "customer", ignore = true)
-    @Mapping(target = "veterinaryClinic", ignore = true)
-    @Mapping(target = "employee", ignore = true)
-    void updateEntity(AppointmentNewUpdateDTO dto, @MappingTarget Appointment entity);
+        //Mapeo del empleado por medio de la relation
+        if(entity.getEmployee() != null){
+            dto.setEmployeeName(entity.getEmployee().getNames());
+        }
+
+        return dto;
+    } 
+
+    // Si se requiere mapear una lista de este tipo use la utilidad ListaMappeo descrita en el Package Utility.
+
+    //2. NewUpdateDTO a Entidad
+    //Esto se emplea para crear o editar las citas
+    public static Appointment toEntity(AppointmentNewUpdateDTO dto){
+        //Primero hay que validad que nuestro querido dto no sea nulo
+        if(dto == null){
+            return null;
+        }
+        //Creamos el nuevo objeto de tipo Appointment
+
+        Appointment entity = new Appointment();
+        entity.setAppointmentDateTime(dto.getAppointmentDateTime());
+        entity.setReason(dto.getReason());
+        entity.setStatus(AppointmentStatus.PENDING);
+
+        //No asignamos nada referente a Customer, VeterinaryClinic y Employee por el hecho de que se deben asignar en la capa de servicio
+        return entity;
+    }
+
+    //3. Actualizacion de entidad
+    public static void updateEntity(AppointmentNewUpdateDTO dto, Appointment entity){
+        //Verificamos que ninguno de los dos vengan vacios, tanto el dto, como la entidad
+        if(dto == null || entity == null){
+            return;
+        }
+
+        //Actualizandin.. Metemos everything a traves de if para evitar la insercion de un null
+        if(dto.getAppointmentDateTime() != null){
+            entity.setAppointmentDateTime(dto.getAppointmentDateTime());
+        }
+        if(dto.getReason() != null){
+            entity.setReason(dto.getReason());
+        }
+        if(dto.getStatus() != null){
+            entity.setStatus(dto.getStatus());
+        }
+
+        //Si se requiere cambiar el id tanto de Customer, VeterinaryClinic y Employee se hara desde la capa de servicio
+    }
 }

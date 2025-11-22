@@ -6,7 +6,6 @@ import edu.sena.petcare.dto.Pet.PetUpdateDTO;
 import edu.sena.petcare.mapper.PetMapper;
 import edu.sena.petcare.models.*;
 import edu.sena.petcare.repositories.*;
-import edu.sena.petcare.services.Pet.PetService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
