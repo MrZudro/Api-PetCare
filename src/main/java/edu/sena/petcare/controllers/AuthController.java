@@ -1,0 +1,45 @@
+package edu.sena.petcare.controllers;
+
+import edu.sena.petcare.dtos.AuthResponseDTO;
+import edu.sena.petcare.dtos.LoginRequestDTO;
+import edu.sena.petcare.dtos.RegisterRequestDTO;
+import edu.sena.petcare.services.AuthService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/auth")
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final AuthService authService;
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponseDTO> register(
+            @RequestBody RegisterRequestDTO request) {
+        return ResponseEntity.ok(authService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDTO> login(
+            @RequestBody LoginRequestDTO request) {
+        return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody String email) {
+        return ResponseEntity.ok(authService.forgotPassword(email));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(
+            @org.springframework.web.bind.annotation.RequestParam String token,
+            @RequestBody String newPassword) {
+        authService.resetPassword(token, newPassword);
+        return ResponseEntity.ok("Password reset successfully");
+    }
+}

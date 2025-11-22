@@ -7,6 +7,7 @@ import java.time.*;
 import java.util.List;
 
 import org.hibernate.annotations.*;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import edu.sena.petcare.models.enums.Rol;
 
@@ -14,21 +15,17 @@ import edu.sena.petcare.models.enums.Rol;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"tokens", "documentType", "barrioCliente"})
+@ToString(exclude = { "tokens", "documentType", "barrioCliente" })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED) //Herencia para las otras entidades
+@Inheritance(strategy = InheritanceType.JOINED) // Herencia para las otras entidades
 @Table(name = "user")
 @SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
-@FilterDef(
-    name = "activeUsersFilter", // Nombre único para el filtro
-    parameters = @ParamDef(name = "isDeleted", type = Boolean.class)
+@FilterDef(name = "activeUsersFilter", // Nombre único para el filtro
+        parameters = @ParamDef(name = "isDeleted", type = Boolean.class))
+@Filter(name = "activeUsersFilter", condition = "is_deleted = :isDeleted" // Usamos el campo y el parámetro del filtro
 )
-@Filter(
-    name = "activeUsersFilter", 
-    condition = "is_deleted = :isDeleted" // Usamos el campo y el parámetro del filtro
-)
-public abstract class User {
+public abstract class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,18 +74,48 @@ public abstract class User {
 
     // ---------------- RELACIONES -----------------
 
-    //relacion OneToMany con Token
+    // relacion OneToMany con Token
     @OneToMany(mappedBy = "user")
-    List<Token> tokens;
+    transient List<Token> tokens;
 
-    //relacion ManyToOne con DocumentType
+    // relacion ManyToOne con DocumentType
     @ManyToOne
     @JoinColumn(name = "id_document_type", nullable = false)
-    private DocumentType documentType;
+    transient DocumentType documentType;
 
-    //relacion ManyToOne con Neighborhood
+    // relacion ManyToOne con Neighborhood
     @ManyToOne
     @JoinColumn(name = "id_neighborhood")
-    private Neighborhood barrioCliente;
+    transient Neighborhood barrioCliente;
+
+    @Override
+    public java.util.Collection<? extends org.springframework.security.core.GrantedAuthority> getAuthorities() {
+        return List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return !isDeleted;
+    }
 
 }

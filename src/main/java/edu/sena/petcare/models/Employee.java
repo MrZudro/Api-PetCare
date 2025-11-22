@@ -13,9 +13,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "employee")
-@ToString(exclude = {"facturas"})
+@ToString(exclude = { "facturas" })
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class Employee extends User{
+public class Employee extends User {
 
     @Column(name = "employee_code", length = 50, unique = true)
     private String employeeCode; // Código de empleado interno
@@ -26,8 +26,18 @@ public class Employee extends User{
     @Enumerated(EnumType.STRING)
     private EmployeeCargo cargo;
 
-    //relacion con Bill
+    // relacion con Bill
     @OneToMany(mappedBy = "empleado")
     private List<Bill> facturas;
 
+    @Override
+    public java.util.Collection<? extends org.springframework.security.core.GrantedAuthority> getAuthorities() {
+        var authorities = new java.util.ArrayList<org.springframework.security.core.GrantedAuthority>();
+        authorities.add(new org.springframework.security.core.authority.SimpleGrantedAuthority(getRole().name()));
+        if (cargo != null) {
+            authorities.add(
+                    new org.springframework.security.core.authority.SimpleGrantedAuthority("CARGO_" + cargo.name()));
+        }
+        return authorities;
+    }
 }
