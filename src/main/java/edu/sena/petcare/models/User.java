@@ -57,7 +57,7 @@ public abstract class User implements UserDetails {
     @Column(name = "created_date", nullable = false)
     private Instant createdDate = Instant.now();
 
-    @Column(name = "reset_key", length = 20)
+    @Column(name = "reset_key", length = 36)
     private String resetKey;
 
     @Column(name = "reset_date")
@@ -68,6 +68,9 @@ public abstract class User implements UserDetails {
 
     @Column(length = 20, nullable = false)
     private String phone;
+
+    @Column(name = "profile_photo_url", length = 500)
+    private String profilePhotoUrl;
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;

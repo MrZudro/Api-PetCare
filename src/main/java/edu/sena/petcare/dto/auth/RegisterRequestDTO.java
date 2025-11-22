@@ -21,6 +21,8 @@ public class RegisterRequestDTO {
     private String address;
     private String phone;
 
+    private String profilePhotoUrl;
+
     @io.swagger.v3.oas.annotations.media.Schema(example = "1")
     private Long documentTypeId;
 

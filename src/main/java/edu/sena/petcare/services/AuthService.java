@@ -55,6 +55,7 @@ public class AuthService {
         user.setBirthDate(request.getBirthDate());
         user.setAddress(request.getAddress());
         user.setPhone(request.getPhone());
+        user.setProfilePhotoUrl(request.getProfilePhotoUrl());
 
         // Set documentType (required)
         if (request.getDocumentTypeId() != null) {
@@ -89,6 +90,14 @@ public class AuthService {
         return AuthResponseDTO.builder()
                 .token(jwtToken)
                 .refreshToken(refreshToken)
+                .id(savedUser.getId())
+                .role(savedUser.getRole())
+                .names(savedUser.getNames())
+                .lastNames(savedUser.getLastNames())
+                .cargo(savedUser instanceof edu.sena.petcare.models.Employee
+                        ? ((edu.sena.petcare.models.Employee) savedUser).getCargo()
+                        : null)
+                .profilePhotoUrl(savedUser.getProfilePhotoUrl())
                 .build();
     }
 
@@ -106,6 +115,14 @@ public class AuthService {
         return AuthResponseDTO.builder()
                 .token(jwtToken)
                 .refreshToken(refreshToken)
+                .id(user.getId())
+                .role(user.getRole())
+                .names(user.getNames())
+                .lastNames(user.getLastNames())
+                .cargo(user instanceof edu.sena.petcare.models.Employee
+                        ? ((edu.sena.petcare.models.Employee) user).getCargo()
+                        : null)
+                .profilePhotoUrl(user.getProfilePhotoUrl())
                 .build();
     }
 

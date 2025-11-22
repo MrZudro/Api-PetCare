@@ -33,15 +33,15 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestBody String email) {
-        return ResponseEntity.ok(authService.forgotPassword(email));
+    public ResponseEntity<String> forgotPassword(
+            @RequestBody edu.sena.petcare.dto.auth.ForgotPasswordRequestDTO request) {
+        return ResponseEntity.ok(authService.forgotPassword(request.getEmail()));
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(
-            @org.springframework.web.bind.annotation.RequestParam String token,
-            @RequestBody String newPassword) {
-        authService.resetPassword(token, newPassword);
-        return ResponseEntity.ok("Password reset successfully");
+            @RequestBody edu.sena.petcare.dto.auth.ResetPasswordRequestDTO request) {
+        authService.resetPassword(request.getToken(), request.getNewPassword());
+        return ResponseEntity.ok("Contraseña restablecida exitosamente");
     }
 }
