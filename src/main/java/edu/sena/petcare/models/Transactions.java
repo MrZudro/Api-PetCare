@@ -10,18 +10,18 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"bill", "methodTransaction"})
+@ToString(exclude = { "bill", "methodTransaction" })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "transactions")
 public class Transactions {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(name = "id_transaction_gateway",  length = 255, unique = true, nullable = false)
+    @Column(name = "id_transaction_gateway", length = 255, unique = true, nullable = false)
     @EqualsAndHashCode.Include
     private String idTransactionGateway;
 
@@ -40,13 +40,13 @@ public class Transactions {
     @Column(length = 500)
     private String answerJsonGateway;
 
-    //relacion OneToMany con Bill
-    @ManyToOne
+    // relacion OneToMany con Bill
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_bill")
     private Bill bill;
 
-    //relacion OneToMany con MethodPaymentCustomer
-    @ManyToOne
+    // relacion OneToMany con MethodPaymentCustomer
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_payment_saved")
     private MethodPaymentCustomer methodTransaction;
 }

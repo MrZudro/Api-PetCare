@@ -1,4 +1,5 @@
 package edu.sena.petcare.models;
+
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table( name = "locality")
+@Table(name = "locality")
 public class Locality {
 
     @Id
@@ -23,7 +24,7 @@ public class Locality {
     @EqualsAndHashCode.Include
     private String name;
 
-    //relacion OneToMany con Neighborhood
-    @OneToMany(mappedBy = "locality")
+    // relacion OneToMany con Neighborhood
+    @OneToMany(mappedBy = "locality", fetch = FetchType.LAZY)
     private List<Neighborhood> barrios;
 }

@@ -7,14 +7,14 @@ import lombok.*;
 
 @Getter
 @Setter
-@ToString(exclude = {"razas"})
+@ToString(exclude = { "razas" })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table( name = "specie")
+@Table(name = "specie")
 public class Specie {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -24,8 +24,8 @@ public class Specie {
     @EqualsAndHashCode.Include
     private String name;
 
-    //relacion OneToMany con Race
-    @OneToMany(mappedBy = "especie")
+    // relacion OneToMany con Race
+    @OneToMany(mappedBy = "especie", fetch = FetchType.LAZY)
     private List<Race> razas;
 
 }

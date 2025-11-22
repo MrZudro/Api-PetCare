@@ -12,14 +12,13 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(exclude = {"veterinaryClinicServices", "facturas", "documentTypeVeterinary"})
+@ToString(exclude = { "veterinaryClinicServices", "facturas", "documentTypeVeterinary" })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table( name = "veterinary_clinic",
-        uniqueConstraints = @UniqueConstraint(name = "uk_veterinary",  columnNames = {"id_document_type", "document_number"})
-)
+@Table(name = "veterinary_clinic", uniqueConstraints = @UniqueConstraint(name = "uk_veterinary", columnNames = {
+        "id_document_type", "document_number" }))
 public class VeterinaryClinic {
     @EqualsAndHashCode.Include
     @Id
@@ -36,23 +35,22 @@ public class VeterinaryClinic {
     private String phone;
 
     @Column(nullable = false, length = 255)
-    private String email;   
+    private String email;
 
     @Column(name = "document_number", nullable = false, length = 100)
     @EqualsAndHashCode.Include
     private String documentNumber;
 
-
-    //relacion OneToMany con VeterinaryClinic
-    @ManyToOne
+    // relacion OneToMany con VeterinaryClinic
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_document_type")
     private DocumentType documentTypeVeterinary;
 
-    //relacion OneToMany con VeterinaryClinicService
-    @OneToMany(mappedBy = "veterinaryClinic", cascade = CascadeType.ALL, orphanRemoval = true)
+    // relacion OneToMany con VeterinaryClinicService
+    @OneToMany(mappedBy = "veterinaryClinic", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<VeterinaryClinicService> veterinaryClinicServices;
 
-    //relacion OneToMany con Bill
-    @OneToMany(mappedBy = "veterinaryClinic")
+    // relacion OneToMany con Bill
+    @OneToMany(mappedBy = "veterinaryClinic", fetch = FetchType.LAZY)
     private List<Bill> facturas;
 }

@@ -7,7 +7,7 @@ import lombok.*;
 
 @Getter
 @Setter
-@ToString(exclude = {"mascotas", "especie"})
+@ToString(exclude = { "mascotas", "especie" })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,12 +24,12 @@ public class Race {
     @EqualsAndHashCode.Include
     private String name;
 
-    //relacion OneToMany con Specie
-    @ManyToOne
+    // relacion OneToMany con Specie
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_specie")
     private Specie especie;
 
-    //relacion OneToMany con Pet
-    @OneToMany(mappedBy = "raza")
+    // relacion OneToMany con Pet
+    @OneToMany(mappedBy = "raza", fetch = FetchType.LAZY)
     private List<Pet> mascotas;
 }

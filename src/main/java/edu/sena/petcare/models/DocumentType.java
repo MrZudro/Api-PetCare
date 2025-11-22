@@ -28,8 +28,8 @@ public class DocumentType {
     @EqualsAndHashCode.Include
     private String abreviation;
 
-    //relacion ManyToOne con User
-    @OneToMany(mappedBy = "documentType")
+    // relacion ManyToOne con User
+    @OneToMany(mappedBy = "documentType", fetch = FetchType.LAZY)
     private List<User> users;
 
 }

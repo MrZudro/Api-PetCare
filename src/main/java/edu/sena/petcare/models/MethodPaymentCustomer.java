@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"user", "bill", "transactions"})
+@ToString(exclude = { "user", "bill", "transactions" })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "method_payment_customer")
@@ -34,25 +34,25 @@ public class MethodPaymentCustomer {
     @Column(name = "last_four_digits", length = 50, nullable = false)
     private Integer lastFourDigits;
 
-    @Column(name = "expiration_date",length = 7, nullable = false)
+    @Column(name = "expiration_date", length = 7, nullable = false)
     private String expirationDate;
 
-    @Column(name="is_default", nullable = false)
+    @Column(name = "is_default", nullable = false)
     private Boolean isDefault;
 
-    @Column(name="creation_date", nullable = false)
+    @Column(name = "creation_date", nullable = false)
     private LocalDateTime creationDate;
 
-    //relacion OneToMany con User
-    @ManyToOne
+    // relacion OneToMany con User
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user")
     private User user;
 
-    //relacion OneToMany con Bill
-    @OneToMany(mappedBy = "metodoCliente")
+    // relacion OneToMany con Bill
+    @OneToMany(mappedBy = "metodoCliente", fetch = FetchType.LAZY)
     private List<Bill> bill;
 
-    //relacion OneToMany con Transactions
-    @OneToMany(mappedBy = "methodTransaction")
+    // relacion OneToMany con Transactions
+    @OneToMany(mappedBy = "methodTransaction", fetch = FetchType.LAZY)
     private List<Transactions> transactions;
 }

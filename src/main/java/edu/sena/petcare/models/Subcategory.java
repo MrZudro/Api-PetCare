@@ -9,12 +9,12 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"categoria", "productSubcategories"})
+@ToString(exclude = { "categoria", "productSubcategories" })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "subcategory")
 public class Subcategory {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,11 +23,11 @@ public class Subcategory {
     private String name;
 
     // Relación Many-to-One con Categoria
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id", nullable = false)
     private Category categoria;
-    
+
     // Relación One-to-Many con ProductSubcategory
-    @OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProductSubcategory> productSubcategories;
 }

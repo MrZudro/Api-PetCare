@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"bill", "product", "taxes"})
+@ToString(exclude = { "bill", "product", "taxes" })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "bill_detail")
@@ -23,25 +23,24 @@ public class BillDetail {
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal amount;
 
-    @Column(name = "unit_price",precision = 10, scale = 2, nullable = false)
+    @Column(name = "unit_price", precision = 10, scale = 2, nullable = false)
     private BigDecimal unitPrice;
 
-    @Column(name = "subtotal_line",precision = 10, scale = 2, nullable = false)
+    @Column(name = "subtotal_line", precision = 10, scale = 2, nullable = false)
     private BigDecimal subtotalLine;
 
-    //relacion OneToMany con Bill
-    @ManyToOne
-    @JoinColumn(name="id_bill")
+    // relacion OneToMany con Bill
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_bill")
     private Bill bill;
 
-    //relacion OneToMany con Products
-    @ManyToOne
+    // relacion OneToMany con Products
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_product")
     private Product product;
 
-    //relacion OneToMany con BillTaxes
-    @OneToMany(mappedBy = "billDetail")
+    // relacion OneToMany con BillTaxes
+    @OneToMany(mappedBy = "billDetail", fetch = FetchType.LAZY)
     private List<BillTaxes> taxes;
 
-    
 }

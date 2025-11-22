@@ -1,4 +1,5 @@
 package edu.sena.petcare.models;
+
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -6,7 +7,7 @@ import lombok.*;
 
 @Getter
 @Setter
-@ToString(exclude = {"users", "locality"})
+@ToString(exclude = { "users", "locality" })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,12 +24,12 @@ public class Neighborhood {
     @EqualsAndHashCode.Include
     private String name;
 
-    //relacion OneToMany con Locality
-    @ManyToOne
+    // relacion OneToMany con Locality
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_locality")
     private Locality locality;
 
-    //relacion OneToMany con User
-    @OneToMany(mappedBy = "barrioCliente")
+    // relacion OneToMany con User
+    @OneToMany(mappedBy = "barrioCliente", fetch = FetchType.LAZY)
     private List<User> users;
 }
