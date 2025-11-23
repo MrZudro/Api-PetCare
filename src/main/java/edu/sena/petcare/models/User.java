@@ -19,6 +19,7 @@ import edu.sena.petcare.models.enums.Rol;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED) // Herencia para las otras entidades
+@DiscriminatorColumn(name = "dtype")
 @Table(name = "user")
 @SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
 @FilterDef(name = "activeUsersFilter", // Nombre único para el filtro
