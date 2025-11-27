@@ -20,6 +20,10 @@ public class VeterinaryClinicMapper {
         dto.setPhone(clinic.getPhone());
         dto.setEmail(clinic.getEmail());
         dto.setDocumentNumber(clinic.getDocumentNumber());
+        dto.setPuntuacion(clinic.getPuntuacion());
+        dto.setUbicacion(clinic.getUbicacion());
+        dto.setHorarioPrincipal(clinic.getHorarioPrincipal());
+        dto.setTotalReviews(0); // TODO: Calculate from reviews when review system is implemented
 
         if (clinic.getDocumentTypeVeterinary() != null) {
             dto.setDocumentTypeId(clinic.getDocumentTypeVeterinary().getId());
@@ -39,6 +43,8 @@ public class VeterinaryClinicMapper {
         clinic.setPhone(dto.getPhone());
         clinic.setEmail(dto.getEmail());
         clinic.setDocumentNumber(dto.getDocumentNumber());
+        clinic.setUbicacion(dto.getUbicacion());
+        clinic.setHorarioPrincipal(dto.getHorarioPrincipal());
         return clinic;
     }
 
@@ -51,5 +57,7 @@ public class VeterinaryClinicMapper {
         clinic.setPhone(dto.getPhone());
         clinic.setEmail(dto.getEmail());
         clinic.setDocumentNumber(dto.getDocumentNumber());
+        clinic.setUbicacion(dto.getUbicacion());
+        clinic.setHorarioPrincipal(dto.getHorarioPrincipal());
     }
 }

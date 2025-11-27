@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.hibernate.annotations.ColumnDefault;
+
 @Getter
 @Setter
 @ToString(exclude = { "veterinaryClinicServices", "facturas", "documentTypeVeterinary" })
@@ -40,6 +42,16 @@ public class VeterinaryClinic {
     @Column(name = "document_number", nullable = false, length = 100)
     @EqualsAndHashCode.Include
     private String documentNumber;
+
+    @Column(nullable = false)
+    @ColumnDefault("5.0")
+    private Double puntuacion = 5.0;
+
+    @Column(length = 255)
+    private String ubicacion;
+
+    @Column(name = "horario_principal", columnDefinition = "TEXT")
+    private String horarioPrincipal;
 
     // relacion OneToMany con VeterinaryClinic
     @ManyToOne(fetch = FetchType.LAZY)

@@ -16,4 +16,6 @@ public class VeterinaryClinicNewUpdateDTO {
     private String email;
     private String documentNumber;
     private Long documentTypeId;
+    private String ubicacion;
+    private String horarioPrincipal;
 }

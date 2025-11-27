@@ -18,4 +18,8 @@ public class VeterinaryClinicReadDTO {
     private String documentNumber;
     private Long documentTypeId;
     private String documentTypeName;
+    private Double puntuacion;
+    private String ubicacion;
+    private String horarioPrincipal;
+    private Integer totalReviews;
 }
