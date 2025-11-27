@@ -22,7 +22,10 @@ public class AppointmentNewUpdateDTO {
     private Long veterinaryClinicId;
 
     // El empleado es opcional al crear.
-    private Long employeeId; 
+    private Long employeeId;
+
+    @NotNull(message = "El ID del servicio es obligatorio")
+    private Long serviceId;
 
     @NotNull(message = "La fecha y hora de la cita son obligatorias")
     @FutureOrPresent(message = "La cita debe ser en la fecha actual o futura")
@@ -30,7 +33,7 @@ public class AppointmentNewUpdateDTO {
 
     @Size(max = 500, message = "La razón no debe exceder los 500 caracteres")
     private String reason;
-    
+
     // El estado solo se incluye para la actualización (ej: CANCELLED, CONFIRMED)
-    private AppointmentStatus status; 
+    private AppointmentStatus status;
 }

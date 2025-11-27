@@ -27,11 +27,18 @@ public class AppointmentMapper {
         }
 
         if (entity.getVeterinaryClinic() != null) {
+            dto.setVeterinaryClinicId(entity.getVeterinaryClinic().getId());
             dto.setVeterinaryClinicName(entity.getVeterinaryClinic().getName());
         }
 
         if (entity.getEmployee() != null) {
+            dto.setEmployeeId(entity.getEmployee().getId());
             dto.setEmployeeName(entity.getEmployee().getNames());
+        }
+
+        if (entity.getService() != null) {
+            dto.setServiceId(entity.getService().getId());
+            dto.setServiceName(entity.getService().getName());
         }
 
         return dto;

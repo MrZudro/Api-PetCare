@@ -10,6 +10,7 @@ import edu.sena.petcare.repositories.AppointmentRepository;
 import edu.sena.petcare.repositories.CustomerRepository;
 import edu.sena.petcare.repositories.VeterinaryClinicRepository;
 import edu.sena.petcare.repositories.EmployeeRepository;
+import edu.sena.petcare.repositories.ServicesRepository;
 import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         private final CustomerRepository customerRepository;
         private final VeterinaryClinicRepository clinicRepository;
         private final EmployeeRepository employeeRepository;
+        private final ServicesRepository servicesRepository;
 
         private static final String NOT_FOUND_MSG = "Cita con ID %d no encontrada";
         private static final String NOT_FOUND_MESSAGE = "no encontrado";
@@ -50,6 +52,11 @@ public class AppointmentServiceImpl implements AppointmentService {
                         throw new IllegalArgumentException("veterinaryClinicId cannot be null");
                 }
 
+                Long serviceId = dto.getServiceId();
+                if (serviceId == null) {
+                        throw new IllegalArgumentException("serviceId cannot be null");
+                }
+
                 // 1. Mapear DTO a Entidad e iniciar estado PENDING
                 Appointment appointment = appointmentMapper.toEntity(dto);
 
@@ -61,6 +68,10 @@ public class AppointmentServiceImpl implements AppointmentService {
                 appointment.setVeterinaryClinic(clinicRepository.findById(clinicId)
                                 .orElseThrow(() -> new ResourceNotFoundException(
                                                 "Clínica con ID " + clinicId + " no encontrada")));
+
+                appointment.setService(servicesRepository.findById(serviceId)
+                                .orElseThrow(() -> new ResourceNotFoundException(
+                                                "Servicio con ID " + serviceId + " no encontrado")));
 
                 Long employeeId = dto.getEmployeeId();
                 if (employeeId != null) {
