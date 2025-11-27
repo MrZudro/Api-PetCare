@@ -30,6 +30,10 @@ public class Employee extends User {
     @OneToMany(mappedBy = "empleado")
     List<Bill> facturas;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_veterinary_clinic")
+    private VeterinaryClinic veterinaryClinic;
+
     @Override
     public java.util.Collection<? extends org.springframework.security.core.GrantedAuthority> getAuthorities() {
         var authorities = new java.util.ArrayList<org.springframework.security.core.GrantedAuthority>();

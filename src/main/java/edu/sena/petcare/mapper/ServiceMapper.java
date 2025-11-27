@@ -1,11 +1,13 @@
 package edu.sena.petcare.mapper;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 import edu.sena.petcare.dto.service.ServiceNewUpdateDTO;
 import edu.sena.petcare.dto.service.ServiceReadDTO;
 import edu.sena.petcare.models.Services;
 import edu.sena.petcare.utility.ListaMappeo;
-import java.util.List;
 
 @Component
 public class ServiceMapper {
@@ -20,6 +22,19 @@ public class ServiceMapper {
         dto.setDescription(service.getDescription());
         dto.setStatus(service.getStatus());
         dto.setPicture(service.getPicture());
+        dto.setImageUrl(service.getPicture()); // Map picture to imageUrl for frontend
+
+        // Extract clinics
+        List<edu.sena.petcare.dto.veterinary.VeterinaryClinicSmallDTO> clinics = service
+                .getVeterinaryClinicServices() == null
+                        ? Collections.emptyList()
+                        : service.getVeterinaryClinicServices().stream()
+                                .map(vcs -> new edu.sena.petcare.dto.veterinary.VeterinaryClinicSmallDTO(
+                                        vcs.getVeterinaryClinic().getId(),
+                                        vcs.getVeterinaryClinic().getName()))
+                                .toList();
+        dto.setClinics(clinics);
+
         return dto;
     }
 

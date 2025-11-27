@@ -7,6 +7,6 @@ import edu.sena.petcare.models.Employee;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+
+    java.util.List<Employee> findByVeterinaryClinicId(Long veterinaryClinicId);
 }
-
-

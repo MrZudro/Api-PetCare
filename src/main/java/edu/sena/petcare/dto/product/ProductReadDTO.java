@@ -19,9 +19,17 @@ public class ProductReadDTO {
 
     private String picture;
 
+    private String imageUrl; // Frontend expects this
+
     private String brand;
 
+    private String description;
+
     private BigDecimal price;
+
+    private Integer stock;
+
+    private String subcategories; // First subcategory name (frontend expects string)
 
     private List<Long> subcategoriesIds;
 }

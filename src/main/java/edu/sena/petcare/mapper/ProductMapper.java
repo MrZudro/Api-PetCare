@@ -21,15 +21,25 @@ public class ProductMapper {
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setPicture(entity.getPicture());
+        dto.setImageUrl(entity.getPicture()); // Map picture to imageUrl for frontend
         dto.setBrand(entity.getBrand());
+        dto.setDescription(entity.getDescription());
         dto.setPrice(entity.getPrice());
+        dto.setStock(entity.getStock());
 
+        // Get subcategory IDs
         List<Long> subcategoryIds = entity.getProductSubcategories() == null
                 ? Collections.emptyList()
                 : entity.getProductSubcategories().stream()
                         .map(ps -> ps.getSubcategory().getId())
                         .toList();
         dto.setSubcategoriesIds(subcategoryIds);
+
+        // Get first subcategory name (frontend expects string)
+        String subcategoryName = entity.getProductSubcategories() != null && !entity.getProductSubcategories().isEmpty()
+                ? entity.getProductSubcategories().get(0).getSubcategory().getName()
+                : null;
+        dto.setSubcategories(subcategoryName);
 
         return dto;
     }

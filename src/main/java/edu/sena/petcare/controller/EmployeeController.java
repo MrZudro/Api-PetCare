@@ -44,6 +44,9 @@ public class EmployeeController {
         employeeService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/clinic/{clinicId}")
+    public ResponseEntity<List<EmployeeReadDTO>> getEmployeesByClinic(@PathVariable Long clinicId) {
+        return ResponseEntity.ok(employeeService.findByVeterinaryClinicId(clinicId));
+    }
 }
-
-

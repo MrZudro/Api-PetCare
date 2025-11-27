@@ -28,8 +28,9 @@ public interface AppointmentService {
     AppointmentReadDTO getAppointmentById(Long id);
 
     /**
-     * @Documented Actualiza una cita existente, permitiendo cambios en fecha, hora, razón o estado.
-     * @param id ID de la cita a actualizar.
+     * @Documented Actualiza una cita existente, permitiendo cambios en fecha, hora,
+     *             razón o estado.
+     * @param id  ID de la cita a actualizar.
      * @param dto DTO con los datos actualizados.
      * @return DTO de lectura de la cita actualizada.
      */
@@ -40,4 +41,8 @@ public interface AppointmentService {
      * @param id ID de la cita a eliminar.
      */
     void deleteAppointment(Long id);
+
+    List<AppointmentReadDTO> getAppointmentsByCustomer(Long customerId);
+
+    List<AppointmentReadDTO> getAppointmentsByEmployee(Long employeeId);
 }

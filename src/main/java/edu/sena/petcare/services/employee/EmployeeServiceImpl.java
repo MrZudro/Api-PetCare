@@ -36,13 +36,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         Assert.notNull(dto, "dto es obligatorio");
         Employee entity = employeeMapper.toEntity(dto);
 
-        DocumentType docType = documentTypeRepository.findById(Objects.requireNonNull(dto.getDocumentTypeId(), "documentTypeId es obligatorio"))
-                .orElseThrow(() -> new ResourceNotFoundException("Tipo de documento no encontrado con id: " + dto.getDocumentTypeId()));
+        DocumentType docType = documentTypeRepository
+                .findById(Objects.requireNonNull(dto.getDocumentTypeId(), "documentTypeId es obligatorio"))
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Tipo de documento no encontrado con id: " + dto.getDocumentTypeId()));
         entity.setDocumentType(docType);
 
         if (dto.getNeighborhoodId() != null) {
             Neighborhood barrio = neighborhoodRepository.findById(Objects.requireNonNull(dto.getNeighborhoodId()))
-                    .orElseThrow(() -> new ResourceNotFoundException("Barrio no encontrado con id: " + dto.getNeighborhoodId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Barrio no encontrado con id: " + dto.getNeighborhoodId()));
             entity.setBarrioCliente(barrio);
         }
 
@@ -90,12 +93,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setCargo(EmployeeCargo.valueOf(dto.getCargo()));
 
         DocumentType docType = documentTypeRepository.findById(dto.getDocumentTypeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Tipo de documento no encontrado con id: " + dto.getDocumentTypeId()));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Tipo de documento no encontrado con id: " + dto.getDocumentTypeId()));
         employee.setDocumentType(docType);
 
         if (dto.getNeighborhoodId() != null) {
             Neighborhood barrio = neighborhoodRepository.findById(dto.getNeighborhoodId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Barrio no encontrado con id: " + dto.getNeighborhoodId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Barrio no encontrado con id: " + dto.getNeighborhoodId()));
             employee.setBarrioCliente(barrio);
         } else {
             employee.setBarrioCliente(null);
@@ -114,6 +119,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setDeleted(true);
         employeeRepository.save(employee);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EmployeeReadDTO> findByVeterinaryClinicId(Long veterinaryClinicId) {
+        if (veterinaryClinicId == null) {
+            throw new IllegalArgumentException("veterinaryClinicId cannot be null");
+        }
+        List<Employee> employees = employeeRepository.findByVeterinaryClinicId(veterinaryClinicId);
+        return employeeMapper.toDtoList(employees);
+    }
 }
-
-

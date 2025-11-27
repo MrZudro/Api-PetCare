@@ -179,4 +179,24 @@ public class AppointmentServiceImpl implements AppointmentService {
                 appointmentToCancel.setStatus(AppointmentStatus.CANCELLED);
                 appointmentRepository.save(appointmentToCancel);
         }
+
+        @Override
+        @Transactional(readOnly = true)
+        public List<AppointmentReadDTO> getAppointmentsByCustomer(Long customerId) {
+                if (customerId == null) {
+                        throw new IllegalArgumentException("customerId cannot be null");
+                }
+                List<Appointment> appointments = appointmentRepository.findByCustomerId(customerId);
+                return appointmentMapper.toDtoList(appointments);
+        }
+
+        @Override
+        @Transactional(readOnly = true)
+        public List<AppointmentReadDTO> getAppointmentsByEmployee(Long employeeId) {
+                if (employeeId == null) {
+                        throw new IllegalArgumentException("employeeId cannot be null");
+                }
+                List<Appointment> appointments = appointmentRepository.findByEmployeeId(employeeId);
+                return appointmentMapper.toDtoList(appointments);
+        }
 }
