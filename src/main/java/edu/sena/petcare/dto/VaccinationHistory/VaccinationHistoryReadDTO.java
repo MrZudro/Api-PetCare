@@ -1,17 +1,20 @@
-package edu.sena.petcare.dto.VaccinationHistory;
+package edu.sena.petcare.dto.vaccinationhistory;
 
-import lombok.*;
+import lombok.Data;
+import java.time.LocalDate;
 
-//información de las vacuna.
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class VaccinationHistoryReadDTO {
     private Long id;
-    private String nombre;
-    private String descripcion;
-    private String fechaAplicacion;
-    private boolean activa;
+    private LocalDate applicationDate;
+    private LocalDate nextDueDate;
+    private String lotNumber;
+    private String observations;
+    private String certificate;
+
+    // Nested info
+    private String vaccineName;
+    private String petName;
+    private String employeeName;
+    private String veterinaryClinicName;
 }

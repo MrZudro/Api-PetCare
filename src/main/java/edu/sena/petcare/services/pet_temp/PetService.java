@@ -15,4 +15,6 @@ public interface PetService {
     PetReadDTO getById(Long id);
 
     List<PetReadDTO> getAllByUser(Long userId);
+
+    edu.sena.petcare.dto.Pet.PetDetailDTO getPetDetailById(Long id);
 }

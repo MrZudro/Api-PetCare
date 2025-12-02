@@ -1,58 +1,146 @@
 package edu.sena.petcare.mapper;
 
 import org.springframework.stereotype.Component;
-import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryCreateDTO;
-import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryReadDTO;
-import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryUpdateDTO;
+import edu.sena.petcare.dto.vaccinationhistory.VaccinationHistoryNewUpdateDTO;
+import edu.sena.petcare.dto.vaccinationhistory.VaccinationHistoryReadDTO;
 import edu.sena.petcare.models.VaccinationHistory;
+import edu.sena.petcare.models.Pet;
+import edu.sena.petcare.models.Vaccine;
+import edu.sena.petcare.models.Employee;
+import edu.sena.petcare.models.VeterinaryClinic;
+import edu.sena.petcare.repositories.PetRepository;
+import edu.sena.petcare.repositories.VaccineRepository;
+import edu.sena.petcare.repositories.EmployeeRepository;
+import edu.sena.petcare.repositories.VeterinaryClinicRepository;
 import edu.sena.petcare.utility.ListaMappeo;
-import java.time.LocalDate;
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class VaccinationHistoryMapper {
 
-    public VaccinationHistoryReadDTO toDto(VaccinationHistory entity) {
+    private final PetRepository petRepository;
+    private final VaccineRepository vaccineRepository;
+    private final EmployeeRepository employeeRepository;
+    private final VeterinaryClinicRepository veterinaryClinicRepository;
+
+    public VaccinationHistoryReadDTO toReadDTO(VaccinationHistory entity) {
         if (entity == null) {
             return null;
         }
-        return new VaccinationHistoryReadDTO(
-                entity.getId(),
-                entity.getNombre(),
-                entity.getDescripcion(),
-                entity.getFechaAplicacion() != null ? entity.getFechaAplicacion().toString() : null,
-                entity.isActiva());
+
+        VaccinationHistoryReadDTO dto = new VaccinationHistoryReadDTO();
+        dto.setId(entity.getId());
+        dto.setApplicationDate(entity.getApplicationDate());
+        dto.setNextDueDate(entity.getNextDueDate());
+        dto.setLotNumber(entity.getLotNumber());
+        dto.setObservations(entity.getObservations());
+        dto.setCertificate(entity.getCertificate());
+
+        if (entity.getVaccine() != null) {
+            dto.setVaccineName(entity.getVaccine().getName());
+        }
+        if (entity.getPet() != null) {
+            dto.setPetName(entity.getPet().getName());
+        }
+        if (entity.getEmployee() != null) {
+            // Employee extends User
+            dto.setEmployeeName(entity.getEmployee().getNames());
+        }
+        if (entity.getVeterinaryClinic() != null) {
+            dto.setVeterinaryClinicName(entity.getVeterinaryClinic().getName());
+        }
+
+        return dto;
     }
 
-    public VaccinationHistory toEntity(VaccinationHistoryCreateDTO dto) {
+    public VaccinationHistory toEntity(VaccinationHistoryNewUpdateDTO dto) {
         if (dto == null) {
             return null;
         }
-        VaccinationHistory v = new VaccinationHistory();
-        v.setNombre(dto.getNombre());
-        v.setDescripcion(dto.getDescripcion());
-        if (dto.getFechaAplicacion() != null && !dto.getFechaAplicacion().isEmpty()) {
-            v.setFechaAplicacion(LocalDate.parse(dto.getFechaAplicacion()));
+
+        VaccinationHistory entity = new VaccinationHistory();
+        entity.setApplicationDate(dto.getApplicationDate());
+        entity.setNextDueDate(dto.getNextDueDate());
+        entity.setLotNumber(dto.getLotNumber());
+        entity.setObservations(dto.getObservations());
+        entity.setCertificate(dto.getCertificate());
+
+        // Map relationships
+        if (dto.getIdPet() != null) {
+            Pet pet = petRepository.findById(dto.getIdPet())
+                    .orElseThrow(() -> new RuntimeException("Pet not found with id: " + dto.getIdPet()));
+            entity.setPet(pet);
         }
-        v.setActiva(true);
-        return v;
+
+        if (dto.getIdVaccine() != null) {
+            Vaccine vaccine = vaccineRepository.findById(dto.getIdVaccine())
+                    .orElseThrow(() -> new RuntimeException("Vaccine not found with id: " + dto.getIdVaccine()));
+            entity.setVaccine(vaccine);
+        }
+
+        if (dto.getIdEmployee() != null) {
+            Employee employee = employeeRepository.findById(dto.getIdEmployee())
+                    .orElseThrow(() -> new RuntimeException("Employee not found with id: " + dto.getIdEmployee()));
+            entity.setEmployee(employee);
+        }
+
+        if (dto.getIdVeterinaryClinic() != null) {
+            VeterinaryClinic clinic = veterinaryClinicRepository.findById(dto.getIdVeterinaryClinic())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Veterinary Clinic not found with id: " + dto.getIdVeterinaryClinic()));
+            entity.setVeterinaryClinic(clinic);
+        }
+
+        return entity;
     }
 
-    public void updateEntity(VaccinationHistoryUpdateDTO dto, VaccinationHistory entity) {
+    public void updateEntity(VaccinationHistoryNewUpdateDTO dto, VaccinationHistory entity) {
         if (dto == null || entity == null) {
             return;
         }
-        if (dto.getNombre() != null)
-            entity.setNombre(dto.getNombre());
-        if (dto.getDescripcion() != null)
-            entity.setDescripcion(dto.getDescripcion());
-        if (dto.getFechaAplicacion() != null && !dto.getFechaAplicacion().isEmpty()) {
-            entity.setFechaAplicacion(LocalDate.parse(dto.getFechaAplicacion()));
+
+        if (dto.getApplicationDate() != null)
+            entity.setApplicationDate(dto.getApplicationDate());
+        if (dto.getNextDueDate() != null)
+            entity.setNextDueDate(dto.getNextDueDate());
+        if (dto.getLotNumber() != null)
+            entity.setLotNumber(dto.getLotNumber());
+        if (dto.getObservations() != null)
+            entity.setObservations(dto.getObservations());
+        if (dto.getCertificate() != null)
+            entity.setCertificate(dto.getCertificate());
+
+        // Update relationships
+        if (dto.getIdPet() != null) {
+            Pet pet = petRepository.findById(dto.getIdPet())
+                    .orElseThrow(() -> new RuntimeException("Pet not found with id: " + dto.getIdPet()));
+            entity.setPet(pet);
         }
-        entity.setActiva(dto.isActiva());
+
+        if (dto.getIdVaccine() != null) {
+            Vaccine vaccine = vaccineRepository.findById(dto.getIdVaccine())
+                    .orElseThrow(() -> new RuntimeException("Vaccine not found with id: " + dto.getIdVaccine()));
+            entity.setVaccine(vaccine);
+        }
+
+        if (dto.getIdEmployee() != null) {
+            Employee employee = employeeRepository.findById(dto.getIdEmployee())
+                    .orElseThrow(() -> new RuntimeException("Employee not found with id: " + dto.getIdEmployee()));
+            entity.setEmployee(employee);
+        }
+
+        if (dto.getIdVeterinaryClinic() != null) {
+            VeterinaryClinic clinic = veterinaryClinicRepository.findById(dto.getIdVeterinaryClinic())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Veterinary Clinic not found with id: " + dto.getIdVeterinaryClinic()));
+            entity.setVeterinaryClinic(clinic);
+        }
     }
 
-    public List<VaccinationHistoryReadDTO> toDtoList(List<VaccinationHistory> entities) {
-        return ListaMappeo.toDtoList(entities, this::toDto);
+    public List<VaccinationHistoryReadDTO> toReadDtoList(List<VaccinationHistory> entities) {
+        return ListaMappeo.toDtoList(entities, this::toReadDTO);
     }
 }

@@ -2,6 +2,7 @@ package edu.sena.petcare.controller;
 
 import edu.sena.petcare.dto.Pet.*;
 import edu.sena.petcare.services.pet_temp.PetService;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,13 +10,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pets")
+@RequiredArgsConstructor
 public class PetController {
 
     private final PetService service;
-
-    public PetController(PetService service) {
-        this.service = service;
-    }
 
     @PostMapping
     public ResponseEntity<PetReadDTO> create(@RequestBody PetCreateDTO dto) {
@@ -41,5 +39,10 @@ public class PetController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<PetReadDTO>> getAllByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(service.getAllByUser(userId));
+    }
+
+    @GetMapping("/{id}/detail")
+    public ResponseEntity<PetDetailDTO> getPetDetailById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getPetDetailById(id));
     }
 }

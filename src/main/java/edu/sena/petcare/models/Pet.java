@@ -54,6 +54,22 @@ public class Pet {
     private User user;
 
     // relacion OneToMany con PetConditions
-    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PetConditions> petConditions;
+
+    // relacion OneToMany con VaccinationHistory
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<VaccinationHistory> vaccinationHistories;
+
+    // relacion OneToMany con HistoryRecipes
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<HistoryRecipes> historyRecipes;
+
+    // relacion OneToMany con Consultation
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Consultation> consultations;
+
+    // Campo para alergias
+    @Column(length = 500)
+    private String allergies;
 }

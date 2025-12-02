@@ -1,4 +1,4 @@
-package edu.sena.petcare.dto.VaccinationHistory;
+package edu.sena.petcare.dto.vaccinationhistory;
 
 import lombok.*;
 

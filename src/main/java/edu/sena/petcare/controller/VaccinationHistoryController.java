@@ -1,33 +1,43 @@
 package edu.sena.petcare.controller;
 
-import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryCreateDTO;
-import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryReadDTO;
-import edu.sena.petcare.dto.VaccinationHistory.VaccinationHistoryUpdateDTO;
-import edu.sena.petcare.services.vaccinationhistory_temp.VaccinationHistoryService;
+import java.util.List;
+import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import edu.sena.petcare.dto.vaccinationhistory.VaccinationHistoryReadDTO;
+import edu.sena.petcare.dto.vaccinationhistory.VaccinationHistoryNewUpdateDTO;
+import edu.sena.petcare.services.vaccinationhistory.VaccinationHistoryService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/vaccines")
+@RequestMapping("/api/vaccination-history")
+@RequiredArgsConstructor
 public class VaccinationHistoryController {
 
     private final VaccinationHistoryService service;
 
-    public VaccinationHistoryController(VaccinationHistoryService service) {
-        this.service = service;
+    @PostMapping
+    public ResponseEntity<VaccinationHistoryReadDTO> create(@Valid @RequestBody VaccinationHistoryNewUpdateDTO dto) {
+        VaccinationHistoryReadDTO created = service.create(dto);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @PostMapping
-    public ResponseEntity<VaccinationHistoryReadDTO> create(@RequestBody VaccinationHistoryCreateDTO dto) {
-        return ResponseEntity.ok(service.create(dto));
+    @GetMapping
+    public ResponseEntity<List<VaccinationHistoryReadDTO>> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<VaccinationHistoryReadDTO>> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<VaccinationHistoryReadDTO> update(@PathVariable Long id,
-            @RequestBody VaccinationHistoryUpdateDTO dto) {
+            @Valid @RequestBody VaccinationHistoryNewUpdateDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
@@ -37,13 +47,8 @@ public class VaccinationHistoryController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<VaccinationHistoryReadDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getById(id));
-    }
-
-    @GetMapping
-    public ResponseEntity<List<VaccinationHistoryReadDTO>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    @GetMapping("/pet/{petId}")
+    public ResponseEntity<List<VaccinationHistoryReadDTO>> getByPetId(@PathVariable Long petId) {
+        return ResponseEntity.ok(service.getByPetId(petId));
     }
 }

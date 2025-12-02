@@ -1,18 +1,26 @@
 package edu.sena.petcare.services.pet_temp;
 
 import edu.sena.petcare.dto.Pet.PetCreateDTO;
+import edu.sena.petcare.dto.Pet.PetDetailDTO;
 import edu.sena.petcare.dto.Pet.PetReadDTO;
 import edu.sena.petcare.dto.Pet.PetUpdateDTO;
+import edu.sena.petcare.mapper.PetDetailMapper;
 import edu.sena.petcare.mapper.PetMapper;
 import edu.sena.petcare.models.Pet;
 import edu.sena.petcare.models.Race;
 import edu.sena.petcare.models.User;
+import edu.sena.petcare.repositories.ConsultationRepository;
+import edu.sena.petcare.repositories.HistoryRecipesRepository;
+import edu.sena.petcare.repositories.PetConditionsRepository;
 import edu.sena.petcare.repositories.PetRepository;
 import edu.sena.petcare.repositories.RaceRepository;
 import edu.sena.petcare.repositories.UserRepository;
+import edu.sena.petcare.repositories.VaccinationHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,9 +33,17 @@ public class PetServiceImpl implements PetService {
     private final RaceRepository raceRepository;
     private final UserRepository userRepository;
 
+    // New dependencies for Pet Detail
+    private final PetDetailMapper petDetailMapper;
+    private final PetConditionsRepository petConditionsRepository;
+    private final VaccinationHistoryRepository vaccinationHistoryRepository;
+    private final ConsultationRepository consultationRepository;
+    private final HistoryRecipesRepository historyRecipesRepository;
+
     private static final String NOT_FOUND_MSG = "Mascota no encontrada";
 
     @Override
+    @Transactional
     public PetReadDTO create(PetCreateDTO dto) {
         if (dto == null) {
             throw new IllegalArgumentException("dto cannot be null");
@@ -49,12 +65,12 @@ public class PetServiceImpl implements PetService {
         pet.setRaza(race);
         pet.setUser(user);
 
-        @SuppressWarnings("null")
         Pet savedPet = petRepository.save(pet);
         return petMapper.toDto(savedPet);
     }
 
     @Override
+    @Transactional
     public PetReadDTO update(Long id, PetUpdateDTO dto) {
         if (id == null) {
             throw new IllegalArgumentException("id cannot be null");
@@ -68,12 +84,12 @@ public class PetServiceImpl implements PetService {
         // Actualizar campos simples
         petMapper.updateEntity(dto, pet);
 
-        @SuppressWarnings("null")
         Pet updatedPet = petRepository.save(pet);
         return petMapper.toDto(updatedPet);
     }
 
     @Override
+    @Transactional
     public void deactivate(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("id cannot be null");
@@ -86,6 +102,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PetReadDTO getById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("id cannot be null");
@@ -96,6 +113,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PetReadDTO> getAllByUser(Long userId) {
         if (userId == null) {
             throw new IllegalArgumentException("userId cannot be null");
@@ -104,5 +122,19 @@ public class PetServiceImpl implements PetService {
                 .filter(p -> p.getUser() != null && userId.equals(p.getUser().getId()))
                 .map(petMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PetDetailDTO getPetDetailById(Long id) {
+        Pet pet = petRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(NOT_FOUND_MSG));
+
+        var activeConditions = petConditionsRepository.findActiveConditionsByPetId(id);
+        var vaccinations = vaccinationHistoryRepository.findByPetId(id);
+        var consultations = consultationRepository.findByPetIdOrderByConsultationDateTimeDesc(id);
+        var activePrescriptions = historyRecipesRepository.findActivePrescriptionsByPetId(id, LocalDate.now());
+
+        return petDetailMapper.toPetDetailDTO(pet, activeConditions, vaccinations, consultations, activePrescriptions);
     }
 }
