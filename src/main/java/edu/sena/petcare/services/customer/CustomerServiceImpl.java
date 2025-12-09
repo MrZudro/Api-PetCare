@@ -100,10 +100,20 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setLastNames(dto.getLastNames());
         customer.setDocumentNumber(dto.getDocumentNumber());
         customer.setEmail(dto.getEmail());
-        customer.setPassword(dto.getPassword());
+
+        // Only update password if provided
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            customer.setPassword(dto.getPassword());
+        }
+
         customer.setBirthDate(dto.getBirthDate());
         customer.setAddress(dto.getAddress());
         customer.setPhone(dto.getPhone());
+
+        // Update profile photo URL if provided
+        if (dto.getProfilePhotoUrl() != null && !dto.getProfilePhotoUrl().isBlank()) {
+            customer.setProfilePhotoUrl(dto.getProfilePhotoUrl());
+        }
 
         DocumentType docType = documentTypeRepository
                 .findById(java.util.Objects.requireNonNull(dto.getDocumentTypeId(), "documentTypeId es obligatorio"))

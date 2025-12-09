@@ -44,4 +44,18 @@ public class AuthController {
         authService.resetPassword(request.getToken(), request.getNewPassword());
         return ResponseEntity.ok("Contraseña restablecida exitosamente");
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<java.util.Map<String, String>> refreshToken(
+            @RequestBody edu.sena.petcare.dto.auth.RefreshTokenRequestDTO request) {
+        String newAccessToken = authService.refreshAccessToken(request.getRefreshToken());
+
+        if (newAccessToken != null) {
+            java.util.Map<String, String> response = new java.util.HashMap<>();
+            response.put("token", newAccessToken);
+            return ResponseEntity.ok(response);
+        }
+
+        return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).build();
+    }
 }

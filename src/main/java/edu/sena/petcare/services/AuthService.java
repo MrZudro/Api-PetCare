@@ -180,4 +180,19 @@ public class AuthService {
         user.setResetDate(null);
         userRepository.save(user);
     }
+
+    public String refreshAccessToken(String refreshToken) {
+        try {
+            String username = jwtService.extractUsername(refreshToken);
+            var user = userRepository.findByEmail(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            if (jwtService.isTokenValid(refreshToken, user)) {
+                return jwtService.generateToken(user);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

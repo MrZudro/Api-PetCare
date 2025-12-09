@@ -25,7 +25,7 @@ public class CustomerNewUpdateDTO {
     @Email
     private String email;
 
-    @NotBlank
+    // Password is optional for updates - only required for creation
     private String password;
 
     @NotNull
@@ -41,6 +41,7 @@ public class CustomerNewUpdateDTO {
     private Long documentTypeId;
 
     private Long neighborhoodId;
+
+    // Profile photo URL from Cloudinary
+    private String profilePhotoUrl;
 }
-
-

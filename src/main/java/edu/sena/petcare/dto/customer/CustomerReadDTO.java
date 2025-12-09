@@ -18,6 +18,5 @@ public class CustomerReadDTO {
     private String phone;
     private Long documentTypeId;
     private Long neighborhoodId;
+    private String profilePhotoUrl;
 }
-
-
