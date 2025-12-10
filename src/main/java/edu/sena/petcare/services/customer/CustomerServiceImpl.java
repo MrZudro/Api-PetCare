@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import java.util.Objects;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import edu.sena.petcare.dto.customer.CustomerNewUpdateDTO;
 import edu.sena.petcare.dto.customer.CustomerReadDTO;
@@ -33,6 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final NeighborhoodRepository neighborhoodRepository;
     private final WishlistRepository wishlistRepository;
     private final CustomerMapper customerMapper;
+    private final PasswordEncoder passwordEncoder;
 
     private static final String ID_REQUIRED_MSG = "id es obligatorio";
     private static final String CUSTOMER_NOT_FOUND_MSG = "Cliente no encontrado con id: ";
@@ -42,6 +44,11 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerReadDTO create(CustomerNewUpdateDTO dto) {
         Assert.notNull(dto, "dto es obligatorio");
         Customer entity = customerMapper.toEntity(dto);
+
+        // Encrypt password before saving
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            entity.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
 
         DocumentType docType = documentTypeRepository
                 .findById(java.util.Objects.requireNonNull(dto.getDocumentTypeId(), "documentTypeId es obligatorio"))
@@ -101,9 +108,9 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setDocumentNumber(dto.getDocumentNumber());
         customer.setEmail(dto.getEmail());
 
-        // Only update password if provided
+        // Only update password if provided - encrypt with BCrypt
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-            customer.setPassword(dto.getPassword());
+            customer.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
 
         customer.setBirthDate(dto.getBirthDate());
