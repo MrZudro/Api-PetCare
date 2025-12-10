@@ -59,155 +59,6 @@ INSERT INTO race (name, id_specie) VALUES
 ('Cacatúa Ninfa (Cacatúa Carolina)', 3), -- (Pájaro, ornamental/mascota)
 ('Paloma Mensajera (Columba livia)', 3); -- (Paloma doméstica)
 
-INSERT INTO locality (name) VALUES
-('Usaquén'),
-('Chapinero'),
-('Santa Fe'),
-('San Cristóbal'),
-('Usme'),
-('Tunjuelito'),
-('Bosa'),
-('Kennedy'),
-('Fontibón'),
-('Engativá'),
-('Suba'),
-('Barrios Unidos'),
-('Teusaquillo'),
-('Los Mártires'),
-('Antonio Nariño'),
-('Puente Aranda'),
-('La Candelaria'),
-('Rafael Uribe Uribe'),
-('Ciudad Bolívar'),
-('Sumapaz');
-
-INSERT INTO neighborhood (name, id_locality) VALUES
--- Localidad 1: Usaquén (ID 1)
-('Santa Bárbara', 1), ('Cedritos', 1), ('Santa Ana', 1), ('El Contador', 1),
-('Verbenal', 1), ('Bella Suiza', 1), ('El Chicó Norte', 1), ('Los Rosales', 1),
-('La Uribe', 1), ('San Cristóbal Norte', 1), ('Toberín', 1), ('Country Club', 1),
-('Bosque de Pinos', 1), ('Barrancas', 1), ('El Codito', 1), ('La Pradera', 1),
-('Tibabita', 1), ('Torca', 1), ('Las Margaritas', 1), ('El Bosque', 1),
-
--- Localidad 2: Chapinero (ID 2)
-('Chicó', 2), ('El Nogal', 2), ('Rosales', 2), ('Quinta Camacho', 2),
-('Marly', 2), ('Chapinero Central', 2), ('El Retiro', 2), ('La Cabrera', 2),
-('Lago Gaitán', 2), ('Pardo Rubio', 2), ('San Isidro', 2), ('Antiguo Country', 2),
-('Serranías', 2), ('Emaús', 2), ('Granada', 2), ('María Cristina', 2),
-('Porciúncula', 2), ('El Refugio', 2), ('Chicó Alto', 2), ('Inglaterra', 2),
-
--- Localidad 3: Santa Fe (ID 3)
-('La Candelaria', 3), ('Las Nieves', 3), ('La Macarena', 3), ('Las Cruces', 3),
-('Bosque Izquierdo', 3), ('San Diego', 3), ('Parque Central Bavaria', 3),
-('San Martín', 3), ('Torres del Parque', 3), ('Germania', 3), ('El Consuelo', 3),
-('Egipto', 3), ('La Perseverancia', 3), ('San Bernardo', 3), ('Vitelma', 3),
-
--- Localidad 4: San Cristóbal (ID 4)
-('20 de Julio', 4), ('La Gloria', 4), ('San Blas', 4), ('Los Libertadores', 4),
-('El Sociego', 4), ('Altos del Zipa', 4), ('La Victoria', 4), ('Villa Javier', 4),
-('Guerrero', 4), ('Montecarlo', 4), ('El Triunfo', 4), ('Moralba', 4),
-('Velódromo', 4), ('Ramírez', 4), ('San Dionisio', 4),
-
--- Localidad 5: Usme (ID 5)
-('La Aurora', 5), ('Betania', 5), ('Comuneros', 5), ('Santa Librada', 5),
-('Chuniza', 5), ('El Uval', 5), ('La Fiscala', 5), ('Ciudadela Usme', 5),
-('Gran Yomasa', 5), ('Alaska', 5), ('Samaná', 5), ('Tocas', 5),
-('El Curubo', 5), ('El Pedregal', 5), ('Usme Pueblo', 5),
-
--- Localidad 6: Tunjuelito (ID 6)
-('El Tunal', 6), ('Venecia', 6), ('San Benito', 6), ('Muzú', 6),
-('Fátima', 6), ('Isla del Sol', 6), ('Abraham Lincoln', 6), ('Tunal Oriental', 6),
-('Nuevo Muzú', 6), ('San Carlos', 6), ('Santa Lucía', 6), ('Tejar de Ontario', 6),
-('Samoré', 6), ('Rincón de Venecia', 6), ('El Carmen', 6),
-
--- Localidad 7: Bosa (ID 7)
-('Bosa Centro', 7), ('El Porvenir', 7), ('San Bernardino', 7), ('Bosa Nova', 7),
-('Chicalá', 7), ('La Paz', 7), ('El Corzo', 7), ('Escocia', 7),
-('La Estación', 7), ('La Libertad', 7), ('Brasil', 7), ('Villa Anny', 7),
-('Holanda', 7), ('Jardines de la Libertad', 7), ('El Triunfo', 7), ('Islandia', 7),
-('Antonia Santos', 7), ('San Martín', 7), ('Villa Nhora', 7), ('Carbonel', 7),
-
--- Localidad 8: Kennedy (ID 8)
-('Timiza', 8), ('Castilla', 8), ('Patio Bonito', 8), ('Corabastos', 8),
-('Las Américas', 8), ('Ciudad Kennedy Central', 8), ('El Tintal', 8),
-('Britalia', 8), ('Álamos de Castilla', 8), ('Dindalito', 8), ('La Igualdad', 8),
-('Marsella', 8), ('Carvajal', 8), ('Hipotecho', 8), ('Mandalay', 8),
-('Nueva Marsella', 8), ('Villa Alsacia', 8), ('Banderas', 8), ('Tierra Buena', 8),
-('Calandaima', 8),
-
--- Localidad 9: Fontibón (ID 9)
-('Hayuelos', 9), ('Modelia', 9), ('Ciudad Salitre Occidental', 9),
-('Capellanía', 9), ('Fontibón Centro', 9), ('Grancolombiano', 9),
-('La Esperanza', 9), ('Puerta de Teja', 9), ('Villemar', 9), ('El Tintal Central', 9),
-('Aeropuerto El Dorado', 9), ('La Laguna', 9), ('Puente Grande', 9),
-('Bohíos de Hunza', 9), ('Zona Franca', 9),
-
--- Localidad 10: Engativá (ID 10)
-('Quinta Mutis', 10), ('Modelia', 10), ('Engativá Pueblo', 10), ('Álamos', 10),
-('El Cortijo', 10), ('Garcés Navas', 10), ('Boyacá Real', 10), ('Las Ferias', 10),
-('Ciudadela Colsubsidio', 10), ('Gran Granada', 10), ('Bachué', 10),
-('Florida Blanca', 10), ('Villaluz', 10), ('La Cabaña', 10), ('El Salitre', 10),
-
--- Localidad 11: Suba (ID 11)
-('Colina Campestre', 11), ('Mazurén', 11), ('Suba Centro', 11),
-('Tibabuyes', 11), ('Las Villas', 11), ('Compartir', 11), ('El Rincón', 11),
-('La Gaitana', 11), ('Pontevedra', 11), ('Niza', 11), ('La Carolina', 11),
-('San José de Bavaria', 11), ('El Prado', 11), ('Villa Elisa', 11),
-('Bilbao', 11), ('Toscana', 11), ('Campanella', 11), ('Guaymaral', 11),
-('Atenas', 11), ('Lisboa', 11),
-
--- Localidad 12: Barrios Unidos (ID 12)
-('La Castellana', 12), ('Los Andes', 12), ('12 de Octubre', 12),
-('San Fernando', 12), ('Siete de Agosto', 12), ('Chapinero Occidental', 12),
-('El Polo Club', 12), ('Jardín Valparaíso', 12), ('La Patria', 12),
-('Quinta Mutis', 12), ('Rionegro', 12), ('Alcázares', 12),
-
--- Localidad 13: Teusaquillo (ID 13)
-('Teusaquillo', 13), ('La Soledad', 13), ('Park Way', 13), ('Quinta Paredes', 13),
-('Salitre Greco', 13), ('Galerías', 13), ('Armenia', 13), ('Estrella', 13),
-('Paloquemao', 13), ('La Esmeralda', 13), ('Belalcázar', 13), ('Ciudad Universitaria', 13),
-
--- Localidad 14: Los Mártires (ID 14)
-('Ricaurte', 14), ('Paloquemao', 14), ('San Victorino', 14),
-('La Estanzuela', 14), ('Voto Nacional', 14), ('Santa Isabel', 14),
-('La Favorita', 14), ('Eduardo Santos', 14), ('Veraguas', 14), ('El Progreso', 14),
-('Samper Mendoza', 14), ('Colseguros', 14),
-
--- Localidad 15: Antonio Nariño (ID 15)
-('Ciudad Jardín Sur', 15), ('Restrepo', 15), ('Policarpa', 15),
-('La Fraguita', 15), ('Luna Park', 15), ('San Antonio', 15), ('Caracas', 15),
-('San Jorge Central', 15), ('Ciudad Berna', 15), ('Sevilla', 15),
-('Villa Mayor', 15), ('Eduardo Frey', 15),
-
--- Localidad 16: Puente Aranda (ID 16)
-('Puente Aranda', 16), ('Ciudad Montes', 16), ('Zona Industrial', 16),
-('La Primavera', 16), ('Muzú', 16), ('Batallón Caldas', 16),
-('Salazar Gómez', 16), ('Industrial Centenario', 16), ('La Guaca', 16),
-('Ortezal', 16), ('San Rafael', 16), ('Gorgonzola', 16),
-
--- Localidad 17: La Candelaria (ID 17)
-('Centro Administrativo', 17), ('Belén', 17), ('Las Aguas', 17),
-('Egipto', 17), ('La Catedral', 17), ('Santa Bárbara', 17),
-('La Concordia', 17), ('Nueva Santa Fe de Bogotá', 17),
-
--- Localidad 18: Rafael Uribe Uribe (ID 18)
-('Quiroga', 18), ('Olaya', 18), ('Marco Fidel Suárez', 18),
-('Gustavo Restrepo', 18), ('Bosque de San Carlos', 18), ('Diana Turbay', 18),
-('Claret', 18), ('San José Sur', 18), ('Molinos', 18), ('Los Puentes', 18),
-('Grnja. San Pablo', 18), ('Arrayanes', 18), ('La Paz', 18), ('Centenario', 18),
-
--- Localidad 19: Ciudad Bolívar (ID 19)
-('Arborizadora Alta', 19), ('Lucero', 19), ('San Francisco', 19),
-('El Paraíso', 19), ('Ismael Perdomo', 19), ('Caracolí', 19), ('Potosí', 19),
-('El Mochuelo', 19), ('Candelaria La Nueva', 19), ('Meissen', 19),
-('Jerusalén', 19), ('República de Canadá', 19), ('Madelena', 19),
-('Sumapaz', 19), ('Sierra Morena', 19),
-
--- Localidad 20: Sumapaz (ID 20)
-('San Juan', 20), ('Betania', 20), ('Chicaque', 20), ('Nazareth', 20),
-('Peñalisa', 20), ('La Unión', 20), ('El Hato', 20), ('Raizal', 20),
-('Laguneta', 20), ('El Tíbet', 20), ('Aposentos', 20);
-
 -- DATOS INSERTADOS DE EMPLOYEE POR QUE AUN NO HAY FORM DE REGISTRO (EL password de estos es: 123456, ingresen con el correo que cada uno tiene)
 -- 2 Veterinarians 
 INSERT INTO user (dtype, names, last_names, document_number, email, password_hash, role, birth_date, created_date, address, phone, is_deleted, id_document_type)
@@ -223,10 +74,10 @@ VALUES
 
 INSERT INTO employee (id, employee_code, salary, cargo)
 VALUES 
-((SELECT id FROM user WHERE email = 'vet1@petcare.com'), 'VET001', 5000000.00, 'VETERINARIAN'),
-((SELECT id FROM user WHERE email = 'vet2@petcare.com'), 'VET002', 5000000.00, 'VETERINARIAN'),
-((SELECT id FROM user WHERE email = 'cashier1@petcare.com'), 'CASH001', 2500000.00, 'CASHIER'),
-((SELECT id FROM user WHERE email = 'cashier2@petcare.com'), 'CASH002', 2500000.00, 'CASHIER');
+((SELECT id FROM user WHERE email = 'vet1@petcare.com' LIMIT 1), 'VET001', 5000000.00, 'VETERINARIAN'),
+((SELECT id FROM user WHERE email = 'vet2@petcare.com' LIMIT 1), 'VET002', 5000000.00, 'VETERINARIAN'),
+((SELECT id FROM user WHERE email = 'cashier1@petcare.com' LIMIT 1), 'CASH001', 2500000.00, 'CASHIER'),
+((SELECT id FROM user WHERE email = 'cashier2@petcare.com' LIMIT 1), 'CASH002', 2500000.00, 'CASHIER');
 
 -- ####INSERTCION CLINICAS VETERINARIAS####
 
@@ -650,9 +501,16 @@ VALUES
 -- Registros en tabla employee
 INSERT INTO employee (id, employee_code, salary, cargo)
 VALUES 
-((SELECT id FROM user WHERE email = 'vet3@petcare.com'), 'VET003', 5000000.00, 'VETERINARIAN'),
-((SELECT id FROM user WHERE email = 'vet4@petcare.com'), 'VET004', 5000000.00, 'VETERINARIAN'),
-((SELECT id FROM user WHERE email = 'cashier3@petcare.com'), 'CASH003', 2500000.00, 'CASHIER');
+((SELECT id FROM user WHERE email = 'vet3@petcare.com' LIMIT 1), 'VET003', 5000000.00, 'VETERINARIAN'),
+((SELECT id FROM user WHERE email = 'vet4@petcare.com' LIMIT 1), 'VET004', 5000000.00, 'VETERINARIAN'),
+((SELECT id FROM user WHERE email = 'cashier3@petcare.com' LIMIT 1), 'CASH003', 2500000.00, 'CASHIER');
+
+-- ADMIN USER
+INSERT INTO user (dtype, names, last_names, document_number, email, password_hash, role, birth_date, created_date, address, phone, is_deleted, id_document_type)
+VALUES ('Employee', 'Administrador', 'Sistema', '9999999999', 'admin@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'ADMIN', '1990-01-01', NOW(), 'Calle Admin #123', '3000000000', false, 1);
+
+INSERT INTO employee (id, employee_code, salary, cargo)
+VALUES ((SELECT id FROM user WHERE email = 'admin@petcare.com' LIMIT 1), 'ADM001', 0.00, NULL);
 
 
 -- ================================================================
@@ -660,13 +518,13 @@ VALUES
 -- ================================================================
 
 -- Variables para IDs de empleados
-SET @vet1_id = (SELECT id FROM user WHERE email = 'vet1@petcare.com');
-SET @vet2_id = (SELECT id FROM user WHERE email = 'vet2@petcare.com');
-SET @vet3_id = (SELECT id FROM user WHERE email = 'vet3@petcare.com');
-SET @vet4_id = (SELECT id FROM user WHERE email = 'vet4@petcare.com');
-SET @cash1_id = (SELECT id FROM user WHERE email = 'cashier1@petcare.com');
-SET @cash2_id = (SELECT id FROM user WHERE email = 'cashier2@petcare.com');
-SET @cash3_id = (SELECT id FROM user WHERE email = 'cashier3@petcare.com');
+SET @vet1_id = (SELECT id FROM user WHERE email = 'vet1@petcare.com' LIMIT 1);
+SET @vet2_id = (SELECT id FROM user WHERE email = 'vet2@petcare.com' LIMIT 1);
+SET @vet3_id = (SELECT id FROM user WHERE email = 'vet3@petcare.com' LIMIT 1);
+SET @vet4_id = (SELECT id FROM user WHERE email = 'vet4@petcare.com' LIMIT 1);
+SET @cash1_id = (SELECT id FROM user WHERE email = 'cashier1@petcare.com' LIMIT 1);
+SET @cash2_id = (SELECT id FROM user WHERE email = 'cashier2@petcare.com' LIMIT 1);
+SET @cash3_id = (SELECT id FROM user WHERE email = 'cashier3@petcare.com' LIMIT 1);
 
 -- ================================================================
 -- VETERINARIOS - Horarios
