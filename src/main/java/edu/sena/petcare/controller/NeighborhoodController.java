@@ -31,6 +31,6 @@ public class NeighborhoodController {
 
     @GetMapping("/by-locality/{localityId}")
     public ResponseEntity<List<NeighborhoodReadDTO>> getByLocalityId(@PathVariable Long localityId) {
-        return ResponseEntity.ok(neighborhoodService.getByLocalityId(localityId));
+        return ResponseEntity.ok(neighborhoodService.getByLocalityIdSorted(localityId));
     }
 }

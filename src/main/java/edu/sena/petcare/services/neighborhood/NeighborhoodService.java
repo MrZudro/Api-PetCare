@@ -10,4 +10,6 @@ public interface NeighborhoodService {
     NeighborhoodReadDTO getById(Long id);
 
     List<NeighborhoodReadDTO> getByLocalityId(Long localityId);
+
+    List<NeighborhoodReadDTO> getByLocalityIdSorted(Long localityId);
 }

@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = { "pets", "wishlists", "paymentMethods" })
+@ToString(exclude = { "pets", "wishlists", "paymentMethods", "addresses" })
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Table(name = "customer")
 public class Customer extends User {
@@ -26,5 +26,9 @@ public class Customer extends User {
     // relacion OneToMany con MethodPaymentCustomer
     @OneToMany(mappedBy = "user")
     List<MethodPaymentCustomer> paymentMethods;
+
+    // relacion OneToMany con Address
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<Address> addresses;
 
 }

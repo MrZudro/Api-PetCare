@@ -39,4 +39,13 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
                 .map(neighborhoodMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<NeighborhoodReadDTO> getByLocalityIdSorted(Long localityId) {
+        return neighborhoodRepository.findByLocalityId(localityId)
+                .stream()
+                .sorted((n1, n2) -> n1.getName().compareToIgnoreCase(n2.getName()))
+                .map(neighborhoodMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }
