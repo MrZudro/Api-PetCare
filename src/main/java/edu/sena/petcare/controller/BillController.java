@@ -28,4 +28,15 @@ public class BillController {
     public ResponseEntity<BillReadDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(billService.getById(id));
     }
+
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<BillReadDTO>> getByCustomerId(@PathVariable Long customerId) {
+        return ResponseEntity.ok(billService.getByCustomerId(customerId));
+    }
+
+    @org.springframework.web.bind.annotation.PostMapping("/checkout")
+    public ResponseEntity<BillReadDTO> createOrder(
+            @org.springframework.web.bind.annotation.RequestBody edu.sena.petcare.dto.bill.CheckoutDTO checkoutDTO) {
+        return ResponseEntity.ok(billService.createOrder(checkoutDTO));
+    }
 }

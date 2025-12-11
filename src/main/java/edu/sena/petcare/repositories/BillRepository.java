@@ -7,4 +7,5 @@ import edu.sena.petcare.models.Bill;
 
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Long> {
+    java.util.List<Bill> findByCustomerIdOrderByCreateDateDesc(Long customerId);
 }

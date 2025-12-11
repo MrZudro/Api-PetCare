@@ -13,7 +13,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BillDetailReadDTO {
     private Long id;
+    private Long productId;
+    private String productName;
     private BigDecimal amount;
     private BigDecimal unitPrice;
     private BigDecimal subtotalLine;
+    private String imageUrl;
 }

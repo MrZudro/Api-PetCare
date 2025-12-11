@@ -25,6 +25,22 @@ public class BillMapper {
         dto.setTaxes(bill.getTaxes());
         dto.setTotalBill(bill.getTotalBill());
         dto.setDianState(bill.getDianState());
+
+        if (bill.getBillDetails() != null) {
+            java.util.List<edu.sena.petcare.dto.billdetail.BillDetailReadDTO> detailsDto = bill.getBillDetails()
+                    .stream()
+                    .map(detail -> new edu.sena.petcare.dto.billdetail.BillDetailReadDTO(
+                            detail.getId(),
+                            detail.getProduct() != null ? detail.getProduct().getId() : null,
+                            detail.getProduct() != null ? detail.getProduct().getName() : "Producto Eliminado",
+                            detail.getAmount(),
+                            detail.getUnitPrice(),
+                            detail.getSubtotalLine(),
+                            detail.getProduct() != null ? detail.getProduct().getPicture() : null))
+                    .collect(java.util.stream.Collectors.toList());
+            dto.setBillDetails(detailsDto);
+        }
+
         return dto;
     }
 

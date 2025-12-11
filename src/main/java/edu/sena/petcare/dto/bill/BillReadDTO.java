@@ -24,4 +24,5 @@ public class BillReadDTO {
     private BigDecimal taxes;
     private BigDecimal totalBill;
     private String dianState;
+    private java.util.List<edu.sena.petcare.dto.billdetail.BillDetailReadDTO> billDetails;
 }

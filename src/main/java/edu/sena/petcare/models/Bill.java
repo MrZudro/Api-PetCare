@@ -52,10 +52,18 @@ public class Bill {
     @Column(name = "dian_state", length = 255)
     private String dianState;
 
+    @Column(name = "shipping_address", length = 500)
+    private String shippingAddress;
+
     // relacion OneToMany con VeterinaryClinic
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_veterinary")
     private VeterinaryClinic veterinaryClinic;
+
+    // relacion ManyToOne con Customer
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_customer")
+    private Customer customer;
 
     // relacion OneToMany con MethodPaymentCustomer
     @ManyToOne(fetch = FetchType.LAZY)
