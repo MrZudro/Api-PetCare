@@ -11,10 +11,13 @@ import edu.sena.petcare.repositories.ScheduleRepository;
 import edu.sena.petcare.repositories.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +42,15 @@ public class ScheduleServiceImpl implements ScheduleService {
                         String.format(EMPLOYEE_NOT_FOUND_MSG, nuevoHorarioDTO.getEmployeeId())));
 
         validarRangoHoras(nuevoHorarioDTO.getStart_time(), nuevoHorarioDTO.getEnd_time());
-        validarSolapamiento(nuevoHorarioDTO.getEmployeeId(), nuevoHorarioDTO.getDay(),
-                nuevoHorarioDTO.getStart_time(), nuevoHorarioDTO.getEnd_time(), null);
+
+        // Validar solapamiento por fecha si está disponible, sino por día
+        if (nuevoHorarioDTO.getScheduleDate() != null) {
+            validarSolapamientoPorFecha(nuevoHorarioDTO.getEmployeeId(), nuevoHorarioDTO.getScheduleDate(),
+                    nuevoHorarioDTO.getStart_time(), nuevoHorarioDTO.getEnd_time(), null);
+        } else {
+            validarSolapamiento(nuevoHorarioDTO.getEmployeeId(), nuevoHorarioDTO.getDay(),
+                    nuevoHorarioDTO.getStart_time(), nuevoHorarioDTO.getEnd_time(), null);
+        }
 
         Schedule entity = scheduleMapper.toEntity(nuevoHorarioDTO);
         entity.setEmployee(empleado);
@@ -97,8 +107,15 @@ public class ScheduleServiceImpl implements ScheduleService {
                         String.format(EMPLOYEE_NOT_FOUND_MSG, horarioActualizadoDTO.getEmployeeId())));
 
         validarRangoHoras(horarioActualizadoDTO.getStart_time(), horarioActualizadoDTO.getEnd_time());
-        validarSolapamiento(horarioActualizadoDTO.getEmployeeId(), horarioActualizadoDTO.getDay(),
-                horarioActualizadoDTO.getStart_time(), horarioActualizadoDTO.getEnd_time(), id);
+
+        // Validar solapamiento por fecha si está disponible, sino por día
+        if (horarioActualizadoDTO.getScheduleDate() != null) {
+            validarSolapamientoPorFecha(horarioActualizadoDTO.getEmployeeId(), horarioActualizadoDTO.getScheduleDate(),
+                    horarioActualizadoDTO.getStart_time(), horarioActualizadoDTO.getEnd_time(), id);
+        } else {
+            validarSolapamiento(horarioActualizadoDTO.getEmployeeId(), horarioActualizadoDTO.getDay(),
+                    horarioActualizadoDTO.getStart_time(), horarioActualizadoDTO.getEnd_time(), id);
+        }
 
         scheduleMapper.updateEntity(horarioActualizadoDTO, toUpdate);
         toUpdate.setEmployee(empleado);
@@ -113,6 +130,64 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new ResourceNotFoundException(String.format(NOT_FOUND_MSG, id));
         }
         scheduleRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ScheduleReadDTO> obtenerHorariosProximos(Long employeeId, int dias) {
+        Objects.requireNonNull(employeeId, EMPLOYEE_ID_REQUIRED_MSG);
+
+        LocalDate hoy = LocalDate.now();
+        LocalDate fechaFin = hoy.plusDays(dias);
+
+        return scheduleRepository.findByEmployeeAndDateRange(employeeId, hoy, fechaFin)
+                .stream()
+                .map(scheduleMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<ScheduleReadDTO> obtenerHorariosPorPeriodo(Long employeeId, LocalDate fechaInicio, LocalDate fechaFin) {
+        Objects.requireNonNull(employeeId, EMPLOYEE_ID_REQUIRED_MSG);
+        Objects.requireNonNull(fechaInicio, "fechaInicio es obligatorio");
+        Objects.requireNonNull(fechaFin, "fechaFin es obligatorio");
+
+        return scheduleRepository.findByEmployeeAndDateRange(employeeId, fechaInicio, fechaFin)
+                .stream()
+                .map(scheduleMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<ScheduleReadDTO> obtenerTodosHorariosPorPeriodo(LocalDate fechaInicio, LocalDate fechaFin) {
+        Objects.requireNonNull(fechaInicio, "fechaInicio es obligatorio");
+        Objects.requireNonNull(fechaFin, "fechaFin es obligatorio");
+
+        return scheduleRepository.findByDateRange(fechaInicio, fechaFin)
+                .stream()
+                .map(scheduleMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public List<ScheduleReadDTO> crearHorariosEnLote(List<ScheduleNewUpdateDTO> horariosDTO) {
+        if (horariosDTO == null || horariosDTO.isEmpty()) {
+            throw new BadRequestException("La lista de horarios no puede estar vacía");
+        }
+
+        List<ScheduleReadDTO> horariosCreados = new ArrayList<>();
+
+        for (ScheduleNewUpdateDTO horarioDTO : horariosDTO) {
+            try {
+                ScheduleReadDTO creado = crearHorario(horarioDTO);
+                horariosCreados.add(creado);
+            } catch (Exception e) {
+                // Log error pero continuar con los demás
+                System.err.println("Error creando horario: " + e.getMessage());
+            }
+        }
+
+        return horariosCreados;
     }
 
     private void validarDTO(ScheduleNewUpdateDTO dto) {
@@ -135,6 +210,15 @@ public class ScheduleServiceImpl implements ScheduleService {
         boolean exists = overlapping.stream().anyMatch(s -> excludeId == null || !s.getId().equals(excludeId));
         if (exists) {
             throw new BadRequestException("El horario se solapa con otro existente para el mismo empleado y día");
+        }
+    }
+
+    private void validarSolapamientoPorFecha(Long employeeId, LocalDate scheduleDate, LocalTime start, LocalTime end,
+            Long excludeId) {
+        var overlapping = scheduleRepository.findOverlappingByDate(employeeId, scheduleDate, start, end);
+        boolean exists = overlapping.stream().anyMatch(s -> excludeId == null || !s.getId().equals(excludeId));
+        if (exists) {
+            throw new BadRequestException("El horario se solapa con otro existente para el mismo empleado y fecha");
         }
     }
 }

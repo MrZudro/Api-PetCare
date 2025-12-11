@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalTime;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -11,7 +12,13 @@ import java.time.LocalTime;
 public class ScheduleReadDTO {
     private Long id;
     private Long employeeId;
-    private String day;
+    private String employeeName; // Nombre completo del empleado
+    private String employeeCargo; // Cargo del empleado (VETERINARIAN, CASHIER, etc.)
+    private String day; // Día de la semana
+    private LocalDate scheduleDate; // Fecha específica
     private LocalTime start_time;
     private LocalTime end_time;
+    private Boolean isOvertime; // Indica si son horas extras
+    private LocalDate periodStartDate; // Inicio del período quincenal
+    private LocalDate periodEndDate; // Fin del período quincenal
 }
