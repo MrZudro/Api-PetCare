@@ -7,6 +7,6 @@ import edu.sena.petcare.models.Neighborhood;
 
 @Repository
 public interface NeighborhoodRepository extends JpaRepository<Neighborhood, Long> {
+
+    java.util.List<Neighborhood> findByLocalityId(Long localityId);
 }
-
-

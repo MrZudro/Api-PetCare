@@ -152,4 +152,25 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setDeleted(true);
         customerRepository.save(customer);
     }
+
+    @Override
+    @Transactional
+    public void changePassword(String email, String currentPassword, String newPassword) {
+        var customer = customerRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Verify current password
+        if (!passwordEncoder.matches(currentPassword, customer.getPassword())) {
+            throw new RuntimeException("La contraseña actual es incorrecta");
+        }
+
+        // Validate new password (at least 8 characters)
+        if (newPassword.length() < 8) {
+            throw new RuntimeException("La nueva contraseña debe tener al menos 8 caracteres");
+        }
+
+        // Update password
+        customer.setPassword(passwordEncoder.encode(newPassword));
+        customerRepository.save(customer);
+    }
 }

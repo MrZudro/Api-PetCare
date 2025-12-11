@@ -31,4 +31,12 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
                 .map(neighborhoodMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Neighborhood not found with id: " + id));
     }
+
+    @Override
+    public List<NeighborhoodReadDTO> getByLocalityId(Long localityId) {
+        return neighborhoodRepository.findByLocalityId(localityId)
+                .stream()
+                .map(neighborhoodMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

@@ -8,4 +8,6 @@ public interface NeighborhoodService {
     List<NeighborhoodReadDTO> getAll();
 
     NeighborhoodReadDTO getById(Long id);
+
+    List<NeighborhoodReadDTO> getByLocalityId(Long localityId);
 }

@@ -28,4 +28,9 @@ public class NeighborhoodController {
     public ResponseEntity<NeighborhoodReadDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(neighborhoodService.getById(id));
     }
+
+    @GetMapping("/by-locality/{localityId}")
+    public ResponseEntity<List<NeighborhoodReadDTO>> getByLocalityId(@PathVariable Long localityId) {
+        return ResponseEntity.ok(neighborhoodService.getByLocalityId(localityId));
+    }
 }

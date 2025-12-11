@@ -15,30 +15,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@SecurityRequirement(name = "") // Override global security requirement for public auth endpoints
 public class AuthController {
 
     private final AuthService authService;
 
     @PostMapping("/register")
+    @SecurityRequirement(name = "")
     public ResponseEntity<AuthResponseDTO> register(
             @RequestBody RegisterRequestDTO request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")
+    @SecurityRequirement(name = "")
     public ResponseEntity<AuthResponseDTO> login(
             @RequestBody LoginRequestDTO request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/forgot-password")
+    @SecurityRequirement(name = "")
     public ResponseEntity<String> forgotPassword(
             @RequestBody edu.sena.petcare.dto.auth.ForgotPasswordRequestDTO request) {
         return ResponseEntity.ok(authService.forgotPassword(request.getEmail()));
     }
 
     @PostMapping("/reset-password")
+    @SecurityRequirement(name = "")
     public ResponseEntity<String> resetPassword(
             @RequestBody edu.sena.petcare.dto.auth.ResetPasswordRequestDTO request) {
         authService.resetPassword(request.getToken(), request.getNewPassword());
@@ -46,6 +49,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
+    @SecurityRequirement(name = "")
     public ResponseEntity<java.util.Map<String, String>> refreshToken(
             @RequestBody edu.sena.petcare.dto.auth.RefreshTokenRequestDTO request) {
         String newAccessToken = authService.refreshAccessToken(request.getRefreshToken());
@@ -57,5 +61,20 @@ public class AuthController {
         }
 
         return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(
+            @RequestBody edu.sena.petcare.dto.auth.ChangePasswordDTO request,
+            java.security.Principal principal) {
+        try {
+            authService.changePassword(
+                    principal.getName(),
+                    request.getCurrentPassword(),
+                    request.getNewPassword());
+            return ResponseEntity.ok("Contraseña actualizada exitosamente");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

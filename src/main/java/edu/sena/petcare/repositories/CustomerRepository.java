@@ -7,6 +7,6 @@ import edu.sena.petcare.models.Customer;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+
+    java.util.Optional<Customer> findByEmail(String email);
 }
-
-
