@@ -13,11 +13,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MethodPaymentCustomerReadDTO {
     private Long id;
-    private String cardNumber;
-    private String cardType;
-    private String bankName;
-    private String cvv;
-    private String cardHolderName;
-    private LocalDateTime expirationDate;
+    private String brand; // Visa, Mastercard, Amex, Discover
+    private Integer lastFourDigits;
+    private String expirationDate; // Formato: MM/YY
+    private Boolean isDefault;
     private LocalDateTime creationDate;
+    private Long idUser;
 }

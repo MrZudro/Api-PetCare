@@ -9,83 +9,76 @@ import edu.sena.petcare.models.MethodPaymentCustomer;
 @Component
 public class MethodPaymentCustomerMapper {
 
-    public static final String MSG_DATE = "MM/yyyy";
-
+    /**
+     * Convierte una entidad MethodPaymentCustomer a DTO de lectura
+     */
     public MethodPaymentCustomerReadDTO toDto(MethodPaymentCustomer method) {
         if (method == null) {
             return null;
         }
+
         MethodPaymentCustomerReadDTO dto = new MethodPaymentCustomerReadDTO();
         dto.setId(method.getId());
-        // Map lastFourDigits to masked card number
-        dto.setCardNumber("**** **** **** " + method.getLastFourDigits());
-        dto.setCardType(method.getBrand());
-        // Bank name, CVV, CardHolderName are not in model, setting to null or empty
-        dto.setBankName(null);
-        dto.setCvv(null);
-        dto.setCardHolderName(null);
+        dto.setBrand(method.getBrand());
+        dto.setLastFourDigits(method.getLastFourDigits());
+        dto.setExpirationDate(method.getExpirationDate()); // Ya está en formato MM/YY
+        dto.setIsDefault(method.getIsDefault());
+        dto.setCreationDate(method.getCreationDate());
 
-        if (method.getExpirationDate() != null) {
-            try {
-                // Assuming format MM/yyyy
-                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern(MSG_DATE);
-                java.time.YearMonth ym = java.time.YearMonth.parse(method.getExpirationDate(), formatter);
-                dto.setExpirationDate(ym.atDay(1).atStartOfDay());
-            } catch (Exception e) {
-                dto.setExpirationDate(null);
-            }
+        // Mapear el ID del usuario si existe
+        if (method.getUser() != null) {
+            dto.setIdUser(method.getUser().getId());
         }
 
-        dto.setCreationDate(method.getCreationDate());
         return dto;
     }
 
+    /**
+     * Convierte un DTO de creación/actualización a entidad MethodPaymentCustomer
+     * Nota: El usuario debe ser asignado externamente en el servicio
+     */
     public MethodPaymentCustomer toEntity(MethodPaymentCustomerNewUpdateDTO dto) {
         if (dto == null) {
             return null;
         }
+
         MethodPaymentCustomer method = new MethodPaymentCustomer();
-
-        if (dto.getCardNumber() != null && dto.getCardNumber().length() >= 4) {
-            String num = dto.getCardNumber().replaceAll("\\D", "");
-            if (num.length() >= 4) {
-                method.setLastFourDigits(Integer.parseInt(num.substring(num.length() - 4)));
-            }
-        }
-
-        method.setBrand(dto.getCardType());
-
-        if (dto.getExpirationDate() != null) {
-            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern(MSG_DATE);
-            method.setExpirationDate(dto.getExpirationDate().format(formatter));
-        }
-
-        // Required fields not in DTO - setting defaults or null (might fail validation
-        // but fixes compilation)
-        method.setTokenPaymentMethod("PENDING_TOKEN");
-        method.setTokenClientGateway("PENDING_CLIENT");
-        method.setIsDefault(false);
+        method.setTokenPaymentMethod(dto.getTokenPaymentMethod());
+        method.setTokenClientGateway(dto.getTokenClientGateway());
+        method.setBrand(dto.getBrand());
+        method.setLastFourDigits(dto.getLastFourDigits());
+        method.setExpirationDate(dto.getExpirationDate());
+        method.setIsDefault(dto.getIsDefault() != null ? dto.getIsDefault() : false);
         method.setCreationDate(java.time.LocalDateTime.now());
 
         return method;
     }
 
+    /**
+     * Actualiza una entidad existente con datos del DTO
+     */
     public void updateEntity(MethodPaymentCustomerNewUpdateDTO dto, MethodPaymentCustomer method) {
         if (dto == null || method == null) {
             return;
         }
-        if (dto.getCardNumber() != null) {
-            String num = dto.getCardNumber().replaceAll("\\D", "");
-            if (num.length() >= 4) {
-                method.setLastFourDigits(Integer.parseInt(num.substring(num.length() - 4)));
-            }
+
+        if (dto.getTokenPaymentMethod() != null) {
+            method.setTokenPaymentMethod(dto.getTokenPaymentMethod());
         }
-        if (dto.getCardType() != null) {
-            method.setBrand(dto.getCardType());
+        if (dto.getTokenClientGateway() != null) {
+            method.setTokenClientGateway(dto.getTokenClientGateway());
+        }
+        if (dto.getBrand() != null) {
+            method.setBrand(dto.getBrand());
+        }
+        if (dto.getLastFourDigits() != null) {
+            method.setLastFourDigits(dto.getLastFourDigits());
         }
         if (dto.getExpirationDate() != null) {
-            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern(MSG_DATE);
-            method.setExpirationDate(dto.getExpirationDate().format(formatter));
+            method.setExpirationDate(dto.getExpirationDate());
+        }
+        if (dto.getIsDefault() != null) {
+            method.setIsDefault(dto.getIsDefault());
         }
     }
 }
