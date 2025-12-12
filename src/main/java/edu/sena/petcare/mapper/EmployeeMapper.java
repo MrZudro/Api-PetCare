@@ -22,7 +22,7 @@ public class EmployeeMapper {
                 dto.setDocumentNumber(entity.getDocumentNumber());
                 dto.setEmail(entity.getEmail());
                 dto.setBirthDate(entity.getBirthDate());
-                dto.setAddress(entity.getAddress());
+
                 dto.setPhone(entity.getPhone());
                 dto.setDocumentTypeId(entity.getDocumentType() != null ? entity.getDocumentType().getId() : null);
                 dto.setNeighborhoodId(entity.getBarrioCliente() != null ? entity.getBarrioCliente().getId() : null);
@@ -43,7 +43,7 @@ public class EmployeeMapper {
                 entity.setEmail(dto.getEmail());
                 entity.setPassword(dto.getPassword());
                 entity.setBirthDate(dto.getBirthDate());
-                entity.setAddress(dto.getAddress());
+
                 entity.setPhone(dto.getPhone());
                 entity.setEmployeeCode(dto.getEmployeeCode());
                 entity.setSalary(dto.getSalary());
@@ -70,8 +70,7 @@ public class EmployeeMapper {
                         entity.setPassword(dto.getPassword());
                 if (dto.getBirthDate() != null)
                         entity.setBirthDate(dto.getBirthDate());
-                if (dto.getAddress() != null)
-                        entity.setAddress(dto.getAddress());
+
                 if (dto.getPhone() != null)
                         entity.setPhone(dto.getPhone());
                 if (dto.getEmployeeCode() != null)

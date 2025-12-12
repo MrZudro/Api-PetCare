@@ -21,7 +21,7 @@ public class CustomerMapper {
                 dto.setDocumentNumber(entity.getDocumentNumber());
                 dto.setEmail(entity.getEmail());
                 dto.setBirthDate(entity.getBirthDate());
-                dto.setAddress(entity.getAddress());
+
                 dto.setPhone(entity.getPhone());
                 dto.setDocumentTypeId(entity.getDocumentType() != null ? entity.getDocumentType().getId() : null);
                 dto.setNeighborhoodId(entity.getBarrioCliente() != null ? entity.getBarrioCliente().getId() : null);
@@ -39,7 +39,7 @@ public class CustomerMapper {
                 entity.setEmail(dto.getEmail());
                 // Password encryption handled in Service layer
                 entity.setBirthDate(dto.getBirthDate());
-                entity.setAddress(dto.getAddress());
+
                 entity.setPhone(dto.getPhone());
                 // Relationships handled in Service
                 return entity;
@@ -60,8 +60,7 @@ public class CustomerMapper {
                 // Password encryption handled in Service layer
                 if (dto.getBirthDate() != null)
                         entity.setBirthDate(dto.getBirthDate());
-                if (dto.getAddress() != null)
-                        entity.setAddress(dto.getAddress());
+
                 if (dto.getPhone() != null)
                         entity.setPhone(dto.getPhone());
                 // Relationships handled in Service

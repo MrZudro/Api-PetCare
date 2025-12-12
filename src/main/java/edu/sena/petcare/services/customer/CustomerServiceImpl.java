@@ -114,7 +114,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         customer.setBirthDate(dto.getBirthDate());
-        customer.setAddress(dto.getAddress());
+
         customer.setPhone(dto.getPhone());
 
         // Update profile photo URL if provided

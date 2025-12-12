@@ -64,14 +64,6 @@ public abstract class User implements UserDetails {
     @Column(name = "reset_date")
     private LocalDateTime resetDate;
 
-    /**
-     * @deprecated Use Address entity instead for better address management.
-     *             This field is kept for backward compatibility.
-     */
-    @Deprecated
-    @Column(length = 200, nullable = false)
-    private String address;
-
     @Column(length = 20, nullable = false)
     private String phone;
 

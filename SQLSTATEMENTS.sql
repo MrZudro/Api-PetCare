@@ -61,16 +61,16 @@ INSERT INTO race (name, id_specie) VALUES
 
 -- DATOS INSERTADOS DE EMPLOYEE POR QUE AUN NO HAY FORM DE REGISTRO (EL password de estos es: 123456, ingresen con el correo que cada uno tiene)
 -- 2 Veterinarians 
-INSERT INTO user (dtype, names, last_names, document_number, email, password_hash, role, birth_date, created_date, address, phone, is_deleted, id_document_type)
+INSERT INTO user (dtype, names, last_names, document_number, email, password_hash, role, birth_date, created_date, phone, is_deleted, id_document_type)
 VALUES 
-('Employee', 'Carlos', 'Veterinario', '1001', 'vet1@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1985-05-15', NOW(), 'Calle 123 #45-67', '3001112222', false, 1),
-('Employee', 'Ana', 'Veterinaria', '1002', 'vet2@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1990-08-20', NOW(), 'Carrera 80 #12-34', '3003334444', false, 1);
+('Employee', 'Carlos', 'Veterinario', '1001', 'vet1@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1985-05-15', NOW(), '3001112222', false, 1),
+('Employee', 'Ana', 'Veterinaria', '1002', 'vet2@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1990-08-20', NOW(), '3003334444', false, 1);
 
 -- 2 Cashiers
-INSERT INTO user (dtype, names, last_names, document_number, email, password_hash, role, birth_date, created_date, address, phone, is_deleted, id_document_type)
+INSERT INTO user (dtype, names, last_names, document_number, email, password_hash, role, birth_date, created_date, phone, is_deleted, id_document_type)
 VALUES 
-('Employee', 'Pedro', 'Cajero', '2001', 'cashier1@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1995-02-10', NOW(), 'Avenida Siempre Viva 123', '3105556666', false, 1),
-('Employee', 'Maria', 'Cajera', '2002', 'cashier2@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1998-11-30', NOW(), 'Calle 100 #20-30', '3107778888', false, 1);
+('Employee', 'Pedro', 'Cajero', '2001', 'cashier1@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1995-02-10', NOW(), '3105556666', false, 1),
+('Employee', 'Maria', 'Cajera', '2002', 'cashier2@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1998-11-30', NOW(), '3107778888', false, 1);
 
 INSERT INTO employee (id, employee_code, salary, cargo)
 VALUES 
@@ -488,15 +488,15 @@ SELECT 2, id FROM services WHERE name = 'Terapia de Comportamiento';
 -- NUEVOS EMPLEADOS Y HORARIOS PARA TODOS LOS EMPLEADOS
 -- NUEVOS EMPLEADOS Y NUEVOS HORARIOS PARA LOS MISMOS--
 
-INSERT INTO user (dtype, names, last_names, document_number, email, password_hash, role, birth_date, created_date, address, phone, is_deleted, id_document_type)
+INSERT INTO user (dtype, names, last_names, document_number, email, password_hash, role, birth_date, created_date, phone, is_deleted, id_document_type)
 VALUES 
-('Employee', 'Luis', 'Veterinario', '1003', 'vet3@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1988-03-25', NOW(), 'Calle 50 #30-40', '3009991111', false, 1),
-('Employee', 'Sofia', 'Veterinaria', '1004', 'vet4@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1992-07-18', NOW(), 'Carrera 15 #25-30', '3008882222', false, 1);
+('Employee', 'Luis', 'Veterinario', '1003', 'vet3@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1988-03-25', NOW(), '3009991111', false, 1),
+('Employee', 'Sofia', 'Veterinaria', '1004', 'vet4@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1992-07-18', NOW(), '3008882222', false, 1);
 
 -- 1 Cajero adicional
-INSERT INTO user (dtype, names, last_names, document_number, email, password_hash, role, birth_date, created_date, address, phone, is_deleted, id_document_type)
+INSERT INTO user (dtype, names, last_names, document_number, email, password_hash, role, birth_date, created_date, phone, is_deleted, id_document_type)
 VALUES 
-('Employee', 'Juan', 'Cajero', '2003', 'cashier3@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1996-09-12', NOW(), 'Avenida 68 #45-20', '3106665555', false, 1);
+('Employee', 'Juan', 'Cajero', '2003', 'cashier3@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'EMPLOYEE', '1996-09-12', NOW(), '3106665555', false, 1);
 
 -- Registros en tabla employee
 INSERT INTO employee (id, employee_code, salary, cargo)
@@ -506,8 +506,8 @@ VALUES
 ((SELECT id FROM user WHERE email = 'cashier3@petcare.com' LIMIT 1), 'CASH003', 2500000.00, 'CASHIER');
 
 -- ADMIN USER
-INSERT INTO user (dtype, names, last_names, document_number, email, password_hash, role, birth_date, created_date, address, phone, is_deleted, id_document_type)
-VALUES ('Employee', 'Administrador', 'Sistema', '9999999999', 'admin@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'ADMIN', '1990-01-01', NOW(), 'Calle Admin #123', '3000000000', false, 1);
+INSERT INTO user (dtype, names, last_names, document_number, email, password_hash, role, birth_date, created_date, phone, is_deleted, id_document_type)
+VALUES ('Employee', 'Administrador', 'Sistema', '9999999999', 'admin@petcare.com', '$2a$12$TDzaB0a23T.YFgcQKk0sYuqaMZqtWxn1hlaoVLaA2TAZ569xIDLOi', 'ADMIN', '1990-01-01', NOW(), '3000000000', false, 1);
 
 INSERT INTO employee (id, employee_code, salary, cargo)
 VALUES ((SELECT id FROM user WHERE email = 'admin@petcare.com' LIMIT 1), 'ADM001', 0.00, NULL);

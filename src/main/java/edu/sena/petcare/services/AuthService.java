@@ -35,6 +35,9 @@ public class AuthService {
     private final edu.sena.petcare.repositories.NeighborhoodRepository neighborhoodRepository;
 
     public AuthResponseDTO register(RegisterRequestDTO request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("El correo electrónico ya se encuentra registrado");
+        }
         User user;
         if (request.getRole() == Rol.EMPLOYEE) {
             var employee = new edu.sena.petcare.models.Employee();
@@ -53,7 +56,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole() != null ? request.getRole() : Rol.CUSTOMER);
         user.setBirthDate(request.getBirthDate());
-        user.setAddress(request.getAddress());
+
         user.setPhone(request.getPhone());
         user.setProfilePhotoUrl(request.getProfilePhotoUrl());
 
