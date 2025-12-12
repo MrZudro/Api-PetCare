@@ -120,4 +120,48 @@ public class WishlistServiceImpl implements WishlistService {
                 .map(wishlistMapper::toDto)
                 .toList();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public WishlistReadDTO findByUserId(Long userId) {
+        Wishlist wishlist = wishlistRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Wishlist no encontrada para el usuario: " + userId));
+        return wishlistMapper.toDto(wishlist);
+    }
+
+    @Override
+    @Transactional
+    public WishlistReadDTO addProduct(Long userId, Long productId) {
+        Wishlist wishlist = wishlistRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Wishlist no encontrada para el usuario: " + userId));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con id: " + productId));
+
+        if (!wishlist.getProducts().contains(product)) {
+            wishlist.getProducts().add(product);
+            product.getWishlists().add(wishlist);
+            wishlistRepository.save(wishlist);
+        }
+
+        return wishlistMapper.toDto(wishlist);
+    }
+
+    @Override
+    @Transactional
+    public WishlistReadDTO removeProduct(Long userId, Long productId) {
+        Wishlist wishlist = wishlistRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Wishlist no encontrada para el usuario: " + userId));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con id: " + productId));
+
+        if (wishlist.getProducts().contains(product)) {
+            wishlist.getProducts().remove(product);
+            product.getWishlists().remove(wishlist);
+            wishlistRepository.save(wishlist);
+        }
+
+        return wishlistMapper.toDto(wishlist);
+    }
 }

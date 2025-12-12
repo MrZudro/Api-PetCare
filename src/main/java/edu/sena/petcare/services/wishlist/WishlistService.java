@@ -15,10 +15,14 @@ public interface WishlistService {
 
     WishlistReadDTO findById(Long id);
 
-
-
     void delete(Long id);
 
     // Método para la consulta personalizada
     List<WishlistReadDTO> findByDateRange(LocalDateTime startDate, LocalDateTime endDate);
+
+    WishlistReadDTO findByUserId(Long userId);
+
+    WishlistReadDTO addProduct(Long userId, Long productId);
+
+    WishlistReadDTO removeProduct(Long userId, Long productId);
 }

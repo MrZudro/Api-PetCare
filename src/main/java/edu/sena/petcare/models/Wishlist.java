@@ -29,6 +29,7 @@ public class Wishlist {
     private User user;
 
     // relacion ManyToMany con Product
-    @ManyToMany(mappedBy = "wishlists")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "wishlists_product", joinColumns = @JoinColumn(name = "id_wishlists"), inverseJoinColumns = @JoinColumn(name = "id_product"))
     private List<Product> products;
 }

@@ -1,6 +1,5 @@
 package edu.sena.petcare.controller;
 
-
 import edu.sena.petcare.dto.wishlist.WishlistNewUpdateDTO;
 import edu.sena.petcare.dto.wishlist.WishlistReadDTO;
 import edu.sena.petcare.services.wishlist.WishlistService;
@@ -29,10 +28,8 @@ public class WishlistController {
 
     @GetMapping
     public ResponseEntity<List<WishlistReadDTO>> getAll(
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
 
         List<WishlistReadDTO> wishlists;
         if (startDate != null && endDate != null) {
@@ -62,5 +59,23 @@ public class WishlistController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         wishlistService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<WishlistReadDTO> getByUserId(@PathVariable Long userId) {
+        WishlistReadDTO wishlist = wishlistService.findByUserId(userId);
+        return ResponseEntity.ok(wishlist);
+    }
+
+    @PostMapping("/user/{userId}/product/{productId}")
+    public ResponseEntity<WishlistReadDTO> addProduct(@PathVariable Long userId, @PathVariable Long productId) {
+        WishlistReadDTO updatedWishlist = wishlistService.addProduct(userId, productId);
+        return ResponseEntity.ok(updatedWishlist);
+    }
+
+    @DeleteMapping("/user/{userId}/product/{productId}")
+    public ResponseEntity<WishlistReadDTO> removeProduct(@PathVariable Long userId, @PathVariable Long productId) {
+        WishlistReadDTO updatedWishlist = wishlistService.removeProduct(userId, productId);
+        return ResponseEntity.ok(updatedWishlist);
     }
 }

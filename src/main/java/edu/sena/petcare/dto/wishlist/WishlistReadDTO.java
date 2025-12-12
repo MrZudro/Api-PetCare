@@ -1,5 +1,7 @@
+
 package edu.sena.petcare.dto.wishlist;
 
+import edu.sena.petcare.dto.product.ProductReadDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,6 @@ public class WishlistReadDTO {
 
     private Long userId;
 
-    private List<Long> productIds; // IDs de los productos en la lista
+    private List<ProductReadDTO> products; // Productos completos en la lista
 
 }

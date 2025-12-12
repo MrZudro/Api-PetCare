@@ -11,12 +11,10 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"billDetails", "wishlists", "productSubcategories"})
+@ToString(exclude = { "billDetails", "wishlists", "productSubcategories" })
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table( name = "product",
-        uniqueConstraints = @UniqueConstraint(name = "uk_product", columnNames = {"name",  "brand"})
-)
+@Table(name = "product", uniqueConstraints = @UniqueConstraint(name = "uk_product", columnNames = { "name", "brand" }))
 public class Product {
 
     @Id
@@ -29,7 +27,7 @@ public class Product {
     private String name;
 
     @Column(length = 255, nullable = false)
-    private String picture; 
+    private String picture;
 
     @Column(precision = 19, scale = 2, nullable = false)
     private BigDecimal price;
@@ -50,19 +48,15 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private StatusService isActive;
 
-    //relacion OneToMany con BillDetail
+    // relacion OneToMany con BillDetail
     @OneToMany(mappedBy = "product")
     private List<BillDetail> billDetails;
 
-    //relacion ManyToMany con Wishlists
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable( name = "wishlists_product",
-                joinColumns = @JoinColumn(name="id_product"),
-                inverseJoinColumns = @JoinColumn(name="id_wishlists")
-    )
+    // relacion ManyToMany con Wishlists
+    @ManyToMany(mappedBy = "products")
     private List<Wishlist> wishlists;
 
-    //relacion OneToMany con ProductSubcategory
+    // relacion OneToMany con ProductSubcategory
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductSubcategory> productSubcategories;
 }
